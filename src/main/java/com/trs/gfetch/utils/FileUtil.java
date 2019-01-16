@@ -1,6 +1,8 @@
 package com.trs.gfetch.utils;
 
 
+import com.trs.gfetch.common.GuideAbstract;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,7 +68,7 @@ public class FileUtil {
     		return true;
     	}
     	times = 1;
-    	String dir = "c:\\jietu\\";
+    	String dir = GuideAbstract.picName;
         // 如果dir不以文件分隔符结尾，自动添加文件分隔符
         if (!dir.endsWith(File.separator))
             dir = dir + File.separator;

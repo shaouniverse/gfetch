@@ -13,39 +13,40 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * sina微博转发或同时评论 截图
  * @author lilei
- * @2017-11-28 下午3:10:04
+ * @2018-1-14 下午3:10:04
  * @version v1.0
  */
 @Slf4j
 public class WeiboPostBrowser extends GuideAbstract {
 
+	public WeiboPostBrowser(Task task){
+		this.task = task;
+		start();
+		formatAddress();
+	}
+
 	public static void main(String[] args) {
 		Task task = new Task();
-		task.setAddress("https://weibo.com/76649/Hb0sP5n96");
-		task.setCorpus("继续努力");
+		task.setAddress("https://weibo.com/2803301701/HbUznf0gf?ref=home&rid=0_131072_8_1413025514326955505_0_0_0&type=comment#_rnd1547452436739");
+		task.setCorpus("就应该这样");
 		task.setNick("lilei1929@163.com");
 		task.setPassword("lilei419688..");
 //		task.setNick("15558480767");
 //		task.setPassword("a123456a");
 //		task.setNick("13426195063");
 //		task.setPassword("haotianwen1985");
-		new WeiboPostBrowser().start(task);
+		new WeiboPostBrowser(task).run();
 	}
+
+	/**
+	 * 登录打开地址
+	 */
 	@Override
-	public void start(Task task) {
-		//先清空存放截图的文件夹
-		FileUtil.deleteDirectoryFiles();
-		//保证只返回一次结果
-		isSend = true;
-		run(task);
-	}
-	@Override
-	public void run(Task task){
+	public void run(){
 		WebDriver driver = DriverUtil.getDriver();
 		try {
 			//登录
@@ -54,16 +55,14 @@ public class WeiboPostBrowser extends GuideAbstract {
 				task.setCode(202);//登录失败
 				task.setResult("登录失败");
 				isSuccess(task, suc);
-				return ;
+			}else{
+				//打开转发地址
+				StopLoadPage stopLoadPage = new StopLoadPage();
+				driver.get(task.getAddress());
+				stopLoadPage.isEnterESC=0;
+				//去评论并判断是否成功
+				toComment(driver);
 			}
-			//打开转发地址
-			String address = formatAddress(task);
-			StopLoadPage stopLoadPage = new StopLoadPage();
-			driver.get(address);
-			stopLoadPage.isEnterESC=0;
-			//去评论并判断是否成功
-			toComment(driver,task);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			task.setCode(201);
@@ -75,7 +74,13 @@ public class WeiboPostBrowser extends GuideAbstract {
 		}
 
 	}
-	public void toComment(WebDriver driver,Task task) throws Exception{
+
+	/**
+	 * 去评论
+	 * @param driver
+	 * @throws Exception
+	 */
+	public void toComment(WebDriver driver) throws Exception{
 		//输入语料
 		if(task.getCorpus().length()>0){
 			//转发语料最大限制为140
@@ -121,26 +126,13 @@ public class WeiboPostBrowser extends GuideAbstract {
 	}
 
 	/**
-	 * 找到转发的链接
-	 * @param task
-	 * @return
-	 */
-	public String formatAddress(Task task){
-		String address = task.getAddress();
-		if(address!=null && address.contains("?"))
-			address = address.substring(0, address.indexOf("?"));
-		address += "?type=repost";
-		return address;
-	}
-
-	/**
 	 * 根据语料判断是否发送成功
 	 * @param driver
 	 * @param commentDiv
 	 * @param corpus
 	 * @return
 	 */
-	public boolean juiJietu(WebDriver driver,WebElement commentDiv,String corpus){
+	public static boolean juiJietu(WebDriver driver,WebElement commentDiv,String corpus){
 		WebElement nickE = driver.findElement(By.xpath("/html/body/div[1]/div/div[1]/div/div/div[3]/div[1]/ul/li[5]/a/em[2]"));
 		String nick = nickE.getText().trim();
 		if(commentDiv.getText().trim().contains(nick)){
@@ -159,7 +151,8 @@ public class WeiboPostBrowser extends GuideAbstract {
 	 * @param driver
 	 * @throws IOException
 	 */
-	private String getPic(Task task,WebDriver driver,WebElement comment) {
+	public static String getPic(Task task,WebDriver driver,WebElement comment) {
+		driver.manage().window().maximize();
 		String picName = null;
 		try {
 			//让整个页面截图
@@ -172,10 +165,10 @@ public class WeiboPostBrowser extends GuideAbstract {
 
 			int width = comment.getSize().getWidth();
 			int height = comment.getSize().getHeight();
-
+			log.info("width=="+width+"  height=="+height);
+			log.info("x=="+point.getX()+"  y=="+point.getY());
 			//裁剪整个页面的截图，以获得元素的屏幕截图
 			BufferedImage subimage = bufferedImage.getSubimage(point.getX(), point.getY(), width, height);
-
 			ImageIO.write(subimage, "png", screenshotAs);
 
 			picName = getPicName("weibo");
@@ -187,6 +180,19 @@ public class WeiboPostBrowser extends GuideAbstract {
 		}
 
 		return picName;
+	}
+	/**
+	 * 找到转发的链接
+	 * @return
+	 */
+	@Override
+	public String formatAddress(){
+		String address = task.getAddress();
+		if(address!=null && address.contains("?"))
+			address = address.substring(0, address.indexOf("?"));
+		address += "?type=repost";
+		task.setAddress(address);
+		return address;
 	}
 
 }

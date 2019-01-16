@@ -5,10 +5,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.firefox.ProfilesIni;
 
 import java.util.List;
 
@@ -21,6 +17,7 @@ public class DriverUtil {
 		driver.get("https://blog.csdn.net/yoyocat915/article/details/81772422");
 		Thread.sleep(1000*10);
 		driver.quit();
+
 	}
 
 	/**
@@ -115,6 +112,7 @@ public class DriverUtil {
 		try {
 			return driver.findElement(By.xpath(xpath));
 		} catch (Exception e) {
+			e.printStackTrace();
 			return driver.findElement(By.xpath(xpath));
 		}
 	}

@@ -1,5 +1,6 @@
 package com.trs.gfetch.guidescript.sina;
 
+import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.utils.RuoKuai;
 import org.apache.commons.io.FileUtils;
@@ -12,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class LoginBrowser {
-	public static final String picCode = "c:\\vcode\\sina.png";
+	public static final String codeName = "sina.png";
 
 	public static String toLogin(WebDriver driver, Task task, int number){
 		try {
@@ -99,10 +100,10 @@ public class LoginBrowser {
 
 		ImageIO.write(subimage, "png", screenshotAs);
 
-		File file = new File(picCode);
+		File file = new File(GuideAbstract.picCode+codeName);
 		FileUtils.copyFile(screenshotAs, file);
 
-		String code = RuoKuai.createByPostNew("3000", picCode);
+		String code = RuoKuai.createByPostNew("3000", GuideAbstract.picCode+codeName);
 
 		return code;
 	}
