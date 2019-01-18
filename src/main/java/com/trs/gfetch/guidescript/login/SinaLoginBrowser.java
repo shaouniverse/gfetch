@@ -1,4 +1,4 @@
-package com.trs.gfetch.guidescript.sina;
+package com.trs.gfetch.guidescript.login;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
@@ -12,12 +12,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class LoginBrowser {
-	public static final String codeName = "sina.png";
+public class SinaLoginBrowser {
+	public static final String codeName = "login.png";
 
-	public static String toLogin(WebDriver driver, Task task, int number){
+	public static boolean toLogin(WebDriver driver, Task task, int number){
 		try {
-			driver.get("https://login.sina.com.cn/signup/signin.php");
+			driver.get("https://login.sina.com.cn/signup/signin.php?entry=ent&entry=ent");
 
 			WebElement username = driver.findElement(By.id("username"));
 			username.clear();
@@ -49,18 +49,19 @@ public class LoginBrowser {
 				loginButton2.click();
 				Thread.sleep(2000);
 			}catch(Exception e){
-				System.out.println("验证码失败");
-				System.out.println("验证码失败");
+				System.out.println("无验证码");
+				System.out.println("无验证码");
 			}
 			String currentUrl = driver.getCurrentUrl();
 			Thread.sleep(200);
-			if(StringUtils.isNotBlank(currentUrl) && currentUrl.contains("login.sina.com")){
+			if(StringUtils.isNotBlank(currentUrl) && currentUrl.contains("login.login.com")){
 				try {
 					WebElement error = driver.findElement(By.xpath("//*[@id='login_err']/span/i[2]"));
 					System.out.println("error.getText()=="+error.getText());
 					if(error.getText().contains("密码")){
 						task.setCode(101);
-						return "用户名或密码错误";
+						task.setResult("用户名或密码错误");
+						return false;
 					}
 				} catch (Exception e) {}
 				//验证码错误循环输入
@@ -69,15 +70,17 @@ public class LoginBrowser {
 					return toLogin(driver,task,number);
 				}
 			}else if(StringUtils.isNotBlank(currentUrl) && currentUrl.contains("security.weibo.com")){
-				task.setCode(101);
-				return "账号被锁";
+				task.setCode(102);
+				task.setResult("账号被锁");
+				return false;
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			task.setCode(102);
-			return "登录报错";
+			task.setCode(103);
+			task.setResult("登录报错");
+			return false;
 		}
-		return "suc";
+		return true;
 	}
 	/**
 	 * 获取验证码

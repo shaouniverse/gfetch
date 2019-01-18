@@ -24,7 +24,18 @@ public class Task implements Serializable {
 	private String remark3;//备用3
 	private String remark4;//备用4
 	private String remark5;//备用5
-	//下面是执行结果
+	/**
+	 * 下面是执行结果
+	 * code: 200 发帖成功
+	 * 101 用户名或密码错误
+	 * 102 账号被锁
+	 * 105 账号需认证
+	 * 103 登录报错
+	 * 104 登录失败
+	 * 201 评论报错失败
+	 * 301 网络繁忙
+	 * 401 发帖失败
+	 */
 	private Integer code;//状态码--200成功
 	private String result;//结果内容
 	private String screenshotData;//返回图片二进制文件

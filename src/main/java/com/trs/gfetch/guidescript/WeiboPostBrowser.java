@@ -2,7 +2,7 @@ package com.trs.gfetch.guidescript;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
-import com.trs.gfetch.guidescript.sina.LoginBrowser;
+import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
 import com.trs.gfetch.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -23,23 +23,27 @@ import java.util.List;
 @Slf4j
 public class WeiboPostBrowser extends GuideAbstract {
 
-	public WeiboPostBrowser(Task task){
-		this.task = task;
-		start();
-		formatAddress();
-	}
-
 	public static void main(String[] args) {
 		Task task = new Task();
-		task.setAddress("https://weibo.com/2803301701/HbUznf0gf?ref=home&rid=0_131072_8_1413025514326955505_0_0_0&type=comment#_rnd1547452436739");
-		task.setCorpus("就应该这样");
+		task.setAddress("https://weibo.com/2230913455/Hcm0yuJGy");
+		task.setCorpus("哈哈,还有这样的");
 		task.setNick("lilei1929@163.com");
 		task.setPassword("lilei419688..");
 //		task.setNick("15558480767");
 //		task.setPassword("a123456a");
 //		task.setNick("13426195063");
 //		task.setPassword("haotianwen1985");
-		new WeiboPostBrowser(task).run();
+		new WeiboPostBrowser().start(task);
+	}
+
+	@Override
+	public void start(Task task) {
+		//初始化一些参数
+		init(task);
+		//把新闻链接转化成评论链接,评论链接不变
+		formatAddress();
+		//运行
+		run();
 	}
 
 	/**
@@ -50,11 +54,9 @@ public class WeiboPostBrowser extends GuideAbstract {
 		WebDriver driver = DriverUtil.getDriver();
 		try {
 			//登录
-			String suc = LoginBrowser.toLogin(driver, task, 0);
-			if(!suc.equals("suc")){
-				task.setCode(202);//登录失败
-				task.setResult("登录失败");
-				isSuccess(task, suc);
+			boolean suc = SinaLoginBrowser.toLogin(driver, task, 0);
+			if(!suc){
+				isSuccess(task);
 			}else{
 				//打开转发地址
 				StopLoadPage stopLoadPage = new StopLoadPage();
@@ -185,7 +187,6 @@ public class WeiboPostBrowser extends GuideAbstract {
 	 * 找到转发的链接
 	 * @return
 	 */
-	@Override
 	public String formatAddress(){
 		String address = task.getAddress();
 		if(address!=null && address.contains("?"))
