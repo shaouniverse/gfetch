@@ -21,7 +21,7 @@ public class SinaLoginBrowser {
 
 			WebElement username = driver.findElement(By.id("username"));
 			username.clear();
-			username.sendKeys(task.getNick());
+			username.sendKeys(task.getAccount());
 
 			WebElement password = driver.findElement(By.id("password"));
 			password.clear();

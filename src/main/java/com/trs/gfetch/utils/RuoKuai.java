@@ -285,12 +285,7 @@ public class RuoKuai {
 	}
 	/**
 	 * 上传题目图片返回结果	
-	 * @param username		用户名
-	 * @param password		密码
 	 * @param typeid		题目类型
-	 * @param timeout		任务超时时间
-	 * @param softid		软件ID
-	 * @param softkey		软件KEY
 	 * @param filePath		题目截图或原始图二进制数据路径
 	 * @return
 	 * @throws IOException

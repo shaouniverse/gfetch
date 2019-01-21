@@ -1,7 +1,7 @@
 package com.trs.gfetch.common;
 
 import com.trs.gfetch.entity.Task;
-import com.trs.gfetch.guidescript.WeiboPostBrowser;
+import com.trs.gfetch.guidescript.*;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -11,17 +11,20 @@ import lombok.extern.slf4j.Slf4j;
 public class GuideDispatch {
     //准备运行的脚本
     static{
-        //新浪微博转发
-        GuideAbstract.handlerMap.put("weibo.sina.repost",new WeiboPostBrowser());
-        //腾讯新闻评论
-        GuideAbstract.handlerMap.put("news.qq.comment",new WeiboPostBrowser());
+        //新浪
+        GuideAbstract.handlerMap.put("weibo.sina.repost",new SinaWeiboPostBrowser());
+        GuideAbstract.handlerMap.put("news.sina.comment",new SinaNewsCommentBrowser());
+        GuideAbstract.handlerMap.put("news.sina.praise",new SinaNewsCommentDigg());
+        //腾讯
+        GuideAbstract.handlerMap.put("news.qq.comment",new QQNewsCommentBrowser());
+        GuideAbstract.handlerMap.put("news.qq.praise",new QQNewsCommentDigg());
     }
 
     public static void main(String[] args) {
         Task task = new Task();
         task.setAddress("https://weibo.com/2093492691/Hcum3yZO2?ref=home&rid=9_0_8_4727147237745368504_0_0_0");
         task.setCorpus("学习了");
-        task.setNick("lilei1929@163.com");
+        task.setAccount("lilei1929@163.com");
         task.setPassword("lilei419688..");
         task.setType("weibo.sina.repost");
 

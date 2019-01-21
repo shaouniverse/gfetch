@@ -9,7 +9,7 @@ public class Task implements Serializable {
 
 	private String account;//执行账号
 	private String password;//执行账号密码
-	private String nick;//执行账号昵称
+//	private String nick;//执行账号昵称
 	private String address;//执行地址
 	private String corpus;//执行语料
 	private String title;//执行标题
@@ -102,14 +102,6 @@ public class Task implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getNick() {
-		return nick;
-	}
-
-	public void setNick(String nick) {
-		this.nick = nick;
 	}
 
 	public String getAddress() {

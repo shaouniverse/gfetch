@@ -45,7 +45,9 @@ public class DriverUtil {
 //			return new FirefoxDriver();
 		}
 //		{
-			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver.exe");
+			//chromedriver下载地址: http://chromedriver.storage.googleapis.com/index.html
+			//尽量控制Chrome自动更新,或者驱动要不断升级
+			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver2-45.exe");
 			return new ChromeDriver();
 //		}
 

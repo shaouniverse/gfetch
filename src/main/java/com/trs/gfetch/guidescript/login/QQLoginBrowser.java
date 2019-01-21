@@ -1,6 +1,8 @@
 package com.trs.gfetch.guidescript.login;
 
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.utils.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.*;
@@ -8,7 +10,14 @@ import org.openqa.selenium.*;
 import java.io.IOException;
 import java.util.Set;
 
+@Slf4j
 public class QQLoginBrowser {
+
+    public static void main(String args[]){
+        Task task = new Task();
+        task.setAddress("http://coral.qq.com/3670454015");
+        log.info(formatAddress(task));
+    }
 
     /**
      * 登录
@@ -18,14 +27,16 @@ public class QQLoginBrowser {
      */
     public static boolean toLogin(WebDriver driver, Task task){
         try {
-            driver.get("https://graph.qq.com/oauth2.0/show?which=Login&display=pc&response_type=code&client_id=101487368&redirect_uri=https%3A%2F%2Fpacaio.match.qq.com%2Fqq%2FloginBack%3Fsurl%3Dhttp%3A%2F%2Fbj.jjj.qq.com%2Fa%2F20181114%2F002675.htm&state=5b481c68e379d");
+            driver.get("https://graph.qq.com/oauth2.0/show?which=Login&display=pc&response_type=code&client_id=101487368" +
+                    "&redirect_uri=https://pacaio.match.qq.com/qq/loginBack?surl=" + StringUtil.getURLEncoderString(task.getAddress()) +
+                    "&state=5b481c68e379d");
             driver = driver.switchTo().frame(driver.findElement(By.name("ptlogin_iframe")));
             Thread.sleep(1000);
             driver.findElement(By.id("switcher_plogin")).click();
 
             WebElement username = driver.findElement(By.id("u"));
             username.clear();
-            username.sendKeys(task.getNick());
+            username.sendKeys(task.getAccount());
 
             WebElement password = driver.findElement(By.id("p"));
             password.clear();
@@ -114,7 +125,7 @@ public class QQLoginBrowser {
 
 			WebElement username = driver.findElement(By.id("u"));
 			username.clear();
-			username.sendKeys(task.getNick());
+			username.sendKeys(task.getAccount());
 
 			WebElement password = driver.findElement(By.id("p"));
 			password.clear();
@@ -169,6 +180,9 @@ public class QQLoginBrowser {
      * @return
      */
     public static String formatAddress(Task task){
+        if(task.getAddress().contains("coral.qq")){
+            return task.getAddress().substring(task.getAddress().lastIndexOf("/")+1);
+        }
         String targetId = "";
         try {
             Document doc2 = Jsoup.connect(task.getAddress()).get();
