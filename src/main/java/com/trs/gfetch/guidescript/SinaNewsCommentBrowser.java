@@ -22,7 +22,7 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
     public static void main(String args[]){
         Task task = new Task();
         task.setAddress("http://news.sina.com.cn/o/2018-05-25/doc-ihcaqueu0706189.shtml");
-        task.setCorpus("听说河北也不行了");
+        task.setCorpus("看看情况吧");
         task.setAccount("lilei1929@163.com");
         task.setPassword("lilei419688..");
         new SinaNewsCommentBrowser().start(task);
@@ -36,55 +36,55 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
     }
 
     @Override
-    public void run() {
-        WebDriver driver = DriverUtil.getDriver();
+    public void toComment(){
         try {
-            //登录
-            boolean suc = SinaLoginBrowser.toLogin(driver, task, 0);
-            if(!suc) toSend(task);
-            else toComment(driver);
+            String address = formatAddress(task);
+            if(null == address) address = getCommentAddress(task,driver);
+            if(null == address){
+                task.setResult("查找评论链接失败");
+                task.setCode(402);
+                return ;
+            }
+            task.setAddress(address);
+
+            //打开转发地址
+            StopLoadPage stopLoadPage = new StopLoadPage();
+            driver.get(task.getAddress());
+            stopLoadPage.isEnterESC=0;
+            Thread.sleep(1500);
+            //输入预料
+            WebElement commentArea = driver.findElement(By.xpath("//*[@id='SI_Wrap']/div[1]/div[1]/div/div[1]/div[2]/div[1]/div/textarea"));
+            commentArea.clear();
+            commentArea.sendKeys(task.getCorpus());
+            Thread.sleep(1500);
+            //提交按钮
+            WebElement publicComment=null;
+            try {
+                publicComment = driver.findElement(By.tagName("发布"));
+            } catch (Exception e) {
+                publicComment = driver.findElement(By.xpath("//*[@id='bottom_sina_comment']/div[1]/div[3]/div[2]/a[1]"));
+            }
+            publicComment.click();
+
+            WebElement commentDiv = driver.findElement(By.xpath("//*[@id='SI_Wrap']/div[1]/div[1]/div/div[2]/div[2]/div[3]/div[1]"));
+            isSucc(driver,commentDiv,"sina");
         } catch (Exception e) {
-            e.printStackTrace();
             task.setCode(201);
-            task.setResult("评论报错失败");
-        } finally {
-            DriverUtil.quit(driver);
-            toSend(task);
-            log.info("任务结束");
+            task.setResult("评论异常");
+            e.printStackTrace();
         }
     }
 
-    public void toComment(WebDriver driver) throws Exception{
-        formatAddress(driver);
-        //打开转发地址
-        StopLoadPage stopLoadPage = new StopLoadPage();
-        driver.get(task.getAddress());
-        stopLoadPage.isEnterESC=0;
-        Thread.sleep(1500);
-        //输入预料
-        WebElement commentArea = driver.findElement(By.xpath("//*[@id='SI_Wrap']/div[1]/div[1]/div/div[1]/div[2]/div[1]/div/textarea"));
-        commentArea.clear();
-        commentArea.sendKeys(task.getCorpus());
-        Thread.sleep(1500);
-        //提交按钮
-        WebElement publicComment=null;
-        try {
-            publicComment = driver.findElement(By.tagName("发布"));
-        } catch (Exception e) {
-            publicComment = driver.findElement(By.xpath("//*[@id='bottom_sina_comment']/div[1]/div[3]/div[2]/a[1]"));
-        }
-        publicComment.click();
-
-        WebElement commentDiv = driver.findElement(By.xpath("//*[@id='SI_Wrap']/div[1]/div[1]/div/div[2]/div[2]/div[3]/div[1]"));
-        isSucc(driver,commentDiv,"sina");
-
+    @Override
+    public boolean login() {
+        return SinaLoginBrowser.toLogin(driver, task, 0);
     }
 
     /**
      * 新闻页转化成评论页
      * @return
      */
-    public String formatAddress(WebDriver driver){
+    public static String formatAddress(Task task){
         //是评论页,直接返回
         if(task.getAddress().contains("comment5.news.sina")) return task.getAddress();
 
@@ -135,22 +135,19 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
                 newsIds = newsIds.substring(newsIds.lastIndexOf("/")+1,newsIds.lastIndexOf("."));
                 address = "http://comment5.news.sina.com.cn/comment/skin/default.html?channel="+channel+"&newsid="+newsIds;
             }
+            task.setAddress(address);
         }  catch (Exception e1) {
             address = null;
             e1.printStackTrace();
-        }
-        if(null == address){
-            address = getCommentAddress(driver);
         }
         return address;
     }
 
     /**
      * 获取评论地址
-     * @param driver
      * @return
      */
-    private String getCommentAddress(WebDriver driver){
+    public static String getCommentAddress(Task task,WebDriver driver){
         try {
             driver.get(task.getAddress());
             Thread.sleep(2000);
@@ -170,12 +167,13 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
             if(task.getAddress().contains("sports")){
                 newsid = newsid.replace("conmos", "comos");
             }
-            return "http://comment5.news.sina.com.cn/comment/skin/default.html?channel="+channel+"&newsid="+newsid;
+            String address = "http://comment5.news.sina.com.cn/comment/skin/default.html?channel="+channel+"&newsid="+newsid;
+            task.setAddress(address);
+            return address;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
 
 }

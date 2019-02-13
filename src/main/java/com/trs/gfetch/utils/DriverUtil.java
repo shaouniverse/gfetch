@@ -1,12 +1,11 @@
 package com.trs.gfetch.utils;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class DriverUtil {
 
@@ -79,45 +78,33 @@ public class DriverUtil {
 	}
 
 	/**
-	 * 获得元素返回列表,有时候第二次才能获得到?,让人很无语...
+	 * 滚动到当前元素
 	 * @param driver
-	 * @param clsName
-	 * @return
+	 * @param element
 	 */
-	public static List<WebElement> getElementsByClassName(WebDriver driver, String clsName){
-		try {
-			return driver.findElements(By.className(clsName));
-		} catch (Exception e) {
-			return driver.findElements(By.className(clsName));
-		}
-	}
-	/**
-	 * 获得元素返回列表,有时候第二次才能获得到?,让人很无语...
-	 * @param driver
-	 * @param xpath
-	 * @return
-	 */
-	public static List<WebElement> getElements(WebDriver driver, String xpath){
-		try {
-			return driver.findElements(By.xpath(xpath));
-		} catch (Exception e) {
-			return driver.findElements(By.xpath(xpath));
-		}
-	}
-	/**
-	 * 获得元素
-	 * @param driver
-	 * @param xpath
-	 * @return
-	 */
-	public static WebElement getElement(WebDriver driver, String xpath){
-		try {
-			return driver.findElement(By.xpath(xpath));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return driver.findElement(By.xpath(xpath));
-		}
+	public static void moveMouseToElement(WebDriver driver,WebElement element){
+		//找到元素位置,并滚动鼠标到该位置
+		Point point = element.getLocation();
+		int y = point.getY();
+		JavascriptExecutor web= (JavascriptExecutor)driver;
+		String js = String.format("window.scroll(0, %s)", y);
+		web.executeScript(js);
 	}
 
+	/**
+	 * 切换到新窗口
+	 */
+	public static void switchToNewWindow(WebDriver driver){
+		String currentWindow = driver.getWindowHandle();
+		//得到所有窗口的句柄
+		Set<String> handles = driver.getWindowHandles();
+		//排除当前窗口的句柄，则剩下是新窗口
+		Iterator<String> it = handles.iterator();
+		while(it.hasNext()){
+			if(currentWindow == it.next()) continue;
+			driver.switchTo().window(it.next());
+		}
+
+	}
 
 }

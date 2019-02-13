@@ -6,6 +6,7 @@ public class Task implements Serializable {
 
 	private Integer id;//执行任务id
 	private Integer idSub;//子id
+	private String serviceType;//所在服务器
 
 	private String account;//执行账号
 	private String password;//执行账号密码
@@ -29,12 +30,18 @@ public class Task implements Serializable {
 	 * code: 200 发帖成功
 	 * 101 用户名或密码错误
 	 * 102 账号被锁
-	 * 105 账号需认证
 	 * 103 登录报错
 	 * 104 登录失败
+	 * 105 账号需认证
+	 * 106 验证码验证失败
 	 * 201 评论报错失败
 	 * 301 网络繁忙
+	 * 302 字数不符合评论标准
 	 * 401 发帖失败
+	 * 402 查找评论链接失败
+	 * 501 错误:xxx
+	 * 502 未找到所在评论
+	 * 601 账号不存在
 	 */
 	private Integer code;//状态码--200成功
 	private String result;//结果内容
@@ -191,5 +198,14 @@ public class Task implements Serializable {
 	public void setRemark5(String remark5) {
 		this.remark5 = remark5;
 	}
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+
 
 }

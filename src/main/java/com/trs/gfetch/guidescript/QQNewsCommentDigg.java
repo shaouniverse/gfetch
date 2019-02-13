@@ -3,17 +3,11 @@ package com.trs.gfetch.guidescript;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.guidescript.login.QQLoginBrowser;
-import com.trs.gfetch.utils.DriverUtil;
-import com.trs.gfetch.utils.MQSender;
 import com.trs.gfetch.utils.StopLoadPage;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -47,32 +41,20 @@ public class QQNewsCommentDigg extends GuideAbstract {
     }
 
     @Override
-    public void run() {
-        WebDriver driver = DriverUtil.getDriver();
-        try {
-            //登录
-            boolean suc = QQLoginBrowser.toLogin(driver, task);
-            if(!suc){
-                toSend(task);
-            }else{
-                toDigg(driver);
-            }
-        } catch (Exception e) {
-            task.setCode(201);
-            e.printStackTrace();
-        } finally {
-            DriverUtil.quit(driver);
-            toSend(task);
-            log.info("任务结束");
-        }
+    public boolean login() {
+        return QQLoginBrowser.toLogin(driver, task);
     }
-
     /**
      * 去点赞
-     * @param driver
      * @throws Exception
      */
-    public void toDigg(WebDriver driver) throws Exception{
+    @Override
+    public void toComment() throws Exception{
+        //打开转发地址
+        StopLoadPage stopLoadPage = new StopLoadPage();
+        driver.get(task.getAddress());
+        stopLoadPage.isEnterESC=0;
+
         driver.switchTo().frame(driver.findElement(By.id("commentIframe")));
         for(int i=0;i<2;i++){
             try {

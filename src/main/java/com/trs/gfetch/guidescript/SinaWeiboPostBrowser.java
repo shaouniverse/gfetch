@@ -45,43 +45,18 @@ public class SinaWeiboPostBrowser extends GuideAbstract {
 		run();
 	}
 
-	/**
-	 * 登录打开地址
-	 */
 	@Override
-	public void run(){
-		WebDriver driver = DriverUtil.getDriver();
-		try {
-			//登录
-			boolean suc = SinaLoginBrowser.toLogin(driver, task, 0);
-			if(!suc){
-				toSend(task);
-			}else{
-				//打开转发地址
-				StopLoadPage stopLoadPage = new StopLoadPage();
-				driver.get(task.getAddress());
-				stopLoadPage.isEnterESC=0;
-				//去评论并判断是否成功
-				toComment(driver);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			task.setCode(201);
-			task.setResult("评论报错失败");
-		} finally {
-			DriverUtil.quit(driver);
-			toSend(task);
-			log.info("任务结束");
-		}
-
+	public boolean login() {
+		return SinaLoginBrowser.toLogin(driver, task, 0);
 	}
 
 	/**
 	 * 去评论
-	 * @param driver
 	 * @throws Exception
 	 */
-	public void toComment(WebDriver driver) throws Exception{
+	@Override
+	public void toComment() throws Exception{
+		driver.get(task.getAddress());
 		//输入语料
 		if(task.getCorpus().length()>0){
 			//转发语料最大限制为140

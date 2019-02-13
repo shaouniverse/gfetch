@@ -62,7 +62,6 @@ public class FileUtil {
      * @return 目录删除成功返回true，否则返回false
      */
     public static boolean deleteDirectoryFiles() {
-    	System.out.println("截图删除");
     	if(times<15){
     		times++;
     		return true;
@@ -89,6 +88,7 @@ public class FileUtil {
                     break;
             }
         }
+        System.out.println("截图删除");
         return true;
     }
 

@@ -1,0 +1,10 @@
+调用js引擎
+JavascriptExecutor web= (JavascriptExecutor)driver;
+web.executeScript("arguments[0].click()",WebElement);
+
+滚动条到当前元素,移动鼠标到元素上
+DriverUtil.java --> moveMouseToElement();
+
+如果发现点击不了-->可能需要刷新下页面
+
+

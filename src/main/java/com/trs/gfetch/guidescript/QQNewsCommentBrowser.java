@@ -29,7 +29,6 @@ public class QQNewsCommentBrowser extends GuideAbstract {
 		new QQNewsCommentBrowser().start(task);
 		
 	}
-
 	@Override
 	public void start(Task task) {
 		//初始化一些参数
@@ -40,37 +39,20 @@ public class QQNewsCommentBrowser extends GuideAbstract {
 	}
 
 	@Override
-	public void run() {
-		WebDriver driver = DriverUtil.getDriver();
-		try {
-			//登录
-			boolean suc = QQLoginBrowser.toLogin(driver, task);
-			if(!suc){
-				toSend(task);
-			}else{
-				//打开转发地址
-				StopLoadPage stopLoadPage = new StopLoadPage();
-				driver.get(task.getAddress());
-				stopLoadPage.isEnterESC=0;
-
-				//去评论并判断是否成功
-				toComment(driver);
-			}
-		} catch (Exception e) {
-			task.setCode(201);
-			e.printStackTrace();
-		} finally {
-			DriverUtil.quit(driver);
-			toSend(task);
-			log.info("任务结束");
-		}
+	public boolean login() {
+		return QQLoginBrowser.toLogin(driver, task);
 	}
 
 	/**
 	 * 新浪新闻评论
 	 */
-	public void toComment(WebDriver driver) {
+	@Override
+	public void toComment(){
 		try{
+			//打开转发地址
+			StopLoadPage stopLoadPage = new StopLoadPage();
+			driver.get(task.getAddress());
+			stopLoadPage.isEnterESC=0;
 
 			driver = driver.switchTo().frame(driver.findElement(By.id("commentIframe")));
 
@@ -90,9 +72,6 @@ public class QQNewsCommentBrowser extends GuideAbstract {
 			e.printStackTrace();
 		}
 	}
-
-
-
 
 
 }

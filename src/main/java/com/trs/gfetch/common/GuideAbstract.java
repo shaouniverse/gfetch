@@ -1,17 +1,20 @@
 package com.trs.gfetch.common;
 
 import com.trs.gfetch.entity.Task;
-import com.trs.gfetch.utils.FileUtil;
-import com.trs.gfetch.utils.MQSender;
-import com.trs.gfetch.utils.Pic2Binary;
+import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
+import com.trs.gfetch.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.filters.WebdavFixFilter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Slf4j
@@ -36,7 +39,30 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 	}
 
 	public Task task;
-	public abstract void run();//执行
+	public WebDriver driver = null;
+	public abstract void toComment() throws Exception;//执行评论/点赞
+	public abstract boolean login();//执行登录
+	//真正运行
+	public void run() {
+		driver = DriverUtil.getDriver();
+		driver.manage().window().maximize();
+		try {
+			//登录
+			boolean suc = login();
+			if(!suc) toSend(task);
+			else{
+				toComment();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			task.setCode(201);
+			task.setResult("评论报错失败");
+		} finally {
+//			DriverUtil.quit(driver);
+			toSend(task);
+			log.info("任务结束");
+		}
+	}
 
 	/**
 	 * 发送消息到队列
@@ -47,15 +73,6 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 			MQSender.toMQ(task);
 		}
 	}
-
-	/**
-	 * 获得截图的地址--根据新闻页查找评论页
-	 */
-	public static String getPicName(String name){
-		String picUri = picName+name+".png";
-		return picUri;
-	}
-
 	/**
 	 *初始化一些信息
 	 */
@@ -66,7 +83,6 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 		isSend = true;
 		this.task = task;
 	}
-
 	/**
 	 * 判断是否发贴成功
 	 * @return
@@ -91,22 +107,63 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 		}
 		return element.getText().contains(cor);
 	}
+	/**
+	 * 获得图片验证码
+	 * @param element
+	 * @param name --验证码名称
+	 * @param code --解析验证码编码
+	 * @return
+	 */
+	public static String getVerificationCode(WebDriver driver,WebElement element,String name,String code){
+		try {
 
+			File screenshotAs = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+			BufferedImage bufferedImage = ImageIO.read(screenshotAs);
+			Point point = element.getLocation();
+			int width = getXY(element.getSize().getWidth());
+			int height = getXY(element.getSize().getHeight());
+			int x = getXY(point.getX());
+			int y = getXY(point.getY());
+			log.info("x:"+point.getX()+",y:"+point.getY());
+			log.info("x:"+point.x+",y:"+point.y);
+			BufferedImage subimage = bufferedImage.getSubimage(x, y, width, height);
+			ImageIO.write(subimage, "png", screenshotAs);
+
+			File file = new File(picCode+name+".png");
+			FileUtils.copyFile(screenshotAs, file);
+
+			String result = RuoKuai.createByPostNew(code, picCode+name+".png");
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+
+	/**
+	 * 获得截图的地址--根据新闻页查找评论页
+	 */
+	public static String getPicName(String name){
+		String picUri = picName+name+".png";
+		return picUri;
+	}
 	/**
 	 * 获取评论图片--isSucc方法用
 	 * @param driver
 	 */
-	private static String getPic(WebDriver driver, WebElement comment,String name) {
+	private String getPic(WebDriver driver, WebElement comment,String name) {
 		String picName = null;
 		try {
 			File screenshotAs = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 			BufferedImage bufferedImage = ImageIO.read(screenshotAs);
 			Point point = comment.getLocation();
-			int width = comment.getSize().getWidth();
-			int height = comment.getSize().getHeight() + 100;
+			int width = getXY(comment.getSize().getWidth());
+			int height = getXY(comment.getSize().getHeight()) + 100;
 			if(width<=0) width=300;
-
-			BufferedImage subimage = bufferedImage.getSubimage(point.getX(), point.getY()+25, width, height);
+			int x = getXY(point.getX());
+			int y = getXY(point.getY());
+			BufferedImage subimage = bufferedImage.getSubimage(x, y, width, height);
 			ImageIO.write(subimage, "png", screenshotAs);
 
 			picName = getPicName(name);
@@ -119,4 +176,17 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 		return picName;
 	}
 
+	/**
+	 * 分辨率不一样导致截图不准解决
+	 */
+	public static int getXY(int xy){
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		java.awt.Dimension scrnsize = toolkit.getScreenSize();
+		int width = scrnsize.width;
+		System.out.println ("Screen size : " + scrnsize.width + " * " + scrnsize.height);
+		if(width >= 1800){
+			xy = (int)(xy*1.25);
+		}
+		return xy;
+	}
 }
