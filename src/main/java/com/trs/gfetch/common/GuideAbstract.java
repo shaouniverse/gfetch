@@ -146,6 +146,7 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 	 */
 	public static String getPicName(String name){
 		String picUri = picName+name+".png";
+		System.out.println("picUri=="+picUri);
 		return picUri;
 	}
 	/**
@@ -188,5 +189,17 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 			xy = (int)(xy*1.25);
 		}
 		return xy;
+	}
+
+	/**
+	 * 滑动验证码时,微调xy
+	 * @param x
+	 * @return
+	 */
+	public static int resetXY(int x){
+		if(x>180) x = x-75;
+		else if(x<60) x = x-30;
+		else x = x-50;
+		return x;
 	}
 }

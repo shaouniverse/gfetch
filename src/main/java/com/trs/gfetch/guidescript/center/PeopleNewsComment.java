@@ -27,7 +27,8 @@ public class PeopleNewsComment extends GuideAbstract {
         subTextarea.click();
         subTextarea.sendKeys(task.getCorpus());
         Thread.sleep(1000);
-        driver.findElement(By.linkText("发表")).click();
+        driver.findElement(By.xpath("/html/body/div[2]/div[3]/ul/li[3]/form/div[1]/p/span[1]")).click();
+//        driver.findElement(By.linkText("发表")).click();
         task.setCode(200);
     }
 
@@ -51,18 +52,31 @@ public class PeopleNewsComment extends GuideAbstract {
             driver.findElement(By.id("passWord")).sendKeys(task.getPassword());
             Thread.sleep(500);
             driver.findElement(By.id("login_btn")).click();
+            Thread.sleep(1000);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        WebElement logindiv = driver.findElement(By.className("maskWrap"));
-        if(logindiv.isDisplayed()){
-            task.setCode(101);
-            task.setResult("用户名或密码错误");
-            return false;
-        }else{
-            return true;
-        }
+        return loginSuc();
 
+    }
+
+    public boolean loginSuc(){
+        for(int i=0;i<10;i++){
+            WebElement logindiv = driver.findElement(By.className("maskWrap"));
+            if(logindiv.isDisplayed()){
+                task.setCode(101);
+                task.setResult("用户名或密码错误");
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else{
+                task.setCode(200);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

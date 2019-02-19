@@ -2,9 +2,11 @@ package com.trs.gfetch.utils;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 public class DriverUtil {
@@ -46,8 +48,16 @@ public class DriverUtil {
 //		{
 			//chromedriver下载地址: http://chromedriver.storage.googleapis.com/index.html
 			//尽量控制Chrome自动更新,或者驱动要不断升级
+//			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver.exe");
+//			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver_2-41.exe");
 			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver2-45.exe");
-			return new ChromeDriver();
+//			ChromeOptions options = new ChromeOptions();
+//			options.setBinary("D:\\ProgramFiles\\Google Chrome x32\\chrome.exe");
+//			options.setBinary("D:\\ProgramFiles\\Google Chrome/chrome.exe");
+//			ChromeDriver driver = new ChromeDriver(options);
+			ChromeDriver driver = new ChromeDriver();
+
+			return driver;
 //		}
 
 	}

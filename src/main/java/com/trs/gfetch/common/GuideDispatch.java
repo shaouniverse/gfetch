@@ -4,6 +4,7 @@ import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.guidescript.*;
 import com.trs.gfetch.guidescript.center.CctvNewsComment;
 import com.trs.gfetch.guidescript.center.PeopleNewsComment;
+import com.trs.gfetch.guidescript.center.ThepaperNewsComment;
 import com.trs.gfetch.guidescript.center.XinhuanetNewsComment;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +37,8 @@ public class GuideDispatch {
         GuideAbstract.handlerMap.put("news.xinhua.comment",new XinhuanetNewsComment());
         //央视网
         GuideAbstract.handlerMap.put("news.cctv.comment",new CctvNewsComment());
+        //澎湃网
+        GuideAbstract.handlerMap.put("news.thepaper.comment",new ThepaperNewsComment());
     }
 
     public static void main(String[] args) throws Exception{

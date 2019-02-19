@@ -163,7 +163,7 @@ public class Wy163LoginBrowser {
             InputStream is = openConnection.getInputStream();
             byte[] b = new byte[1024];
             int len;
-            OutputStream os = new FileOutputStream(GuideAbstract.getPicName("wy163"));
+            OutputStream os = new FileOutputStream(new File(GuideAbstract.getPicName("wy163")));
             while((len = is.read(b)) != -1){
                 os.write(b, 0, len);
             }

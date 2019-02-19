@@ -289,6 +289,7 @@ public class RuoKuai {
 	 * @param filePath		题目截图或原始图二进制数据路径
 	 * @return
 	 * @throws IOException
+	 * http://www.ruokuai.com/
 	 */
 	public static String createByPostNew(String typeid,String filePath) {
 		String username = "shikai123456";
