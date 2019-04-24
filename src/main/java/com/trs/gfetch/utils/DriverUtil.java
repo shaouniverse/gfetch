@@ -1,9 +1,11 @@
 package com.trs.gfetch.utils;
 
+import com.trs.gfetch.config.PropertiesConfig;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
 import java.util.Iterator;
@@ -35,29 +37,40 @@ public class DriverUtil {
 	 * 安装包: D:\software\gfetch新版本加载浏览器
 	 */
 	public static WebDriver produceDriver(){
-//		Configur config = GetProprities.myConfig;
-//		String firefoxUrl = config.getProperty("firefoxurl");
-//		System.out.println("firefoxUrl=="+firefoxUrl);
 		{
+			//http://www.cnblogs.com/jinxiao-pu/p/8682126.html 版本对应
 			//定义firefox driver的获取地址
-			//设置系统变量,并设置 geckodriver 的路径为系统属性值
-//			System.setProperty("webdriver.firefox.bin","D:\\software\\firefox46\\firefox.exe");
-//			System.setProperty("webdriver.gecko.driver","D:\\software\\firefox46\\firefox.exe");
-//			return new FirefoxDriver();
+			//firebox版本64位：65.0.1 对应： geckodriver_0-24.exe
+			try {
+                PropertiesConfig propertiesConfig = (PropertiesConfig) SpringUtil.getObject("propertiesConfig");
+                System.setProperty("webdriver.gecko.driver",propertiesConfig.geckodriver);
+                FirefoxOptions options = new FirefoxOptions();
+                System.out.println("webdriver.gecko.driver-------->"+propertiesConfig.geckodriver);
+                System.out.println("propertiesConfig.firefoxurl-------->"+propertiesConfig.firefoxurl);
+                options.setBinary(propertiesConfig.firefoxurl);
+                return new FirefoxDriver(options);
+            }catch (Exception e){
+                System.out.println("----------->本地调用");
+                System.setProperty("webdriver.gecko.driver","target/classes/templates/geckodriver_0-24.exe");
+                FirefoxOptions options = new FirefoxOptions();
+				System.out.println("------>spring未启动,直接写死的URL地址");
+				System.out.println("firefoxurl-------->D:\\Program Files\\Mozilla Firefox\\firefox.exe");
+				options.setBinary("D:\\Program Files\\Mozilla Firefox\\firefox.exe");
+                return new FirefoxDriver(options);
+			}
 		}
 //		{
 			//chromedriver下载地址: http://chromedriver.storage.googleapis.com/index.html
-			//尽量控制Chrome自动更新,或者驱动要不断升级
+			//尽量控制Chrome自动更新,或者驱动要不断升级--仅仅滑动验证码失效改用上面的火狐浏览器
 //			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver.exe");
 //			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver_2-41.exe");
-			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver2-45.exe");
+//			System.setProperty("webdriver.chrome.driver", "target/classes/templates/chromedriver2-45.exe");
 //			ChromeOptions options = new ChromeOptions();
-//			options.setBinary("D:\\ProgramFiles\\Google Chrome x32\\chrome.exe");
 //			options.setBinary("D:\\ProgramFiles\\Google Chrome/chrome.exe");
 //			ChromeDriver driver = new ChromeDriver(options);
-			ChromeDriver driver = new ChromeDriver();
-
-			return driver;
+//			ChromeDriver driver = new ChromeDriver();
+//
+//			return driver;
 //		}
 
 	}
@@ -115,6 +128,12 @@ public class DriverUtil {
 			driver.switchTo().window(it.next());
 		}
 
+	}
+
+	public static void scrollTop(WebDriver driver, int y){
+		String js = "var q=document.documentElement.scrollTop="+y;
+		JavascriptExecutor jj= (JavascriptExecutor)driver;
+		jj.executeScript(js);
 	}
 
 }

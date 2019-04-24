@@ -70,7 +70,7 @@ public class Wy163NewsCommentBrowser extends GuideAbstract {
             try {
                 WebElement realNameAlertMsg = driver.findElement(By.id("realNameAlertMsg"));
                 if(realNameAlertMsg.isDisplayed()){
-                    task.setCode(105);
+                    task.setCode(102);
                     task.setResult("请绑定手机号");
                     return;
                 }
@@ -90,7 +90,11 @@ public class Wy163NewsCommentBrowser extends GuideAbstract {
                 } catch (Exception e) {
                 }
             }
-            isSucc(driver,myResult,"wy163");
+            try {
+                isSucc(driver,myResult,"wy163");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

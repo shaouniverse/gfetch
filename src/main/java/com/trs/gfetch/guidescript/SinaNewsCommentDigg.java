@@ -3,6 +3,7 @@ package com.trs.gfetch.guidescript;
 import com.alibaba.fastjson.JSONObject;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,15 @@ public class SinaNewsCommentDigg extends GuideAbstract {
     @Override
     public void toComment() throws Exception {
         String address = SinaNewsCommentBrowser.formatAddress(task);
-        if(null == address) address = SinaNewsCommentBrowser.getCommentAddress(task,driver);
+        if(null == address){
+            driver.get(task.getAddress());
+            Thread.sleep(2000);
+            if(!SinaLoginBrowser.judgeIsExsit(driver,task)){
+                System.out.println("-------------->访问的页面不存在");
+                return;
+            }
+            address = SinaNewsCommentBrowser.getCommentAddress(task,driver);
+        }
         if(null == address){
             task.setResult("查找评论链接失败");
             task.setCode(402);

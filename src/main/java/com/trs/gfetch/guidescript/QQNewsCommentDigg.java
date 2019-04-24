@@ -51,9 +51,13 @@ public class QQNewsCommentDigg extends GuideAbstract {
     @Override
     public void toComment() throws Exception{
         //打开转发地址
-        StopLoadPage stopLoadPage = new StopLoadPage();
+//        StopLoadPage stopLoadPage = new StopLoadPage();
         driver.get(task.getAddress());
-        stopLoadPage.isEnterESC=0;
+        if(!QQLoginBrowser.judgeIsExsit(driver,task)){
+            System.out.println("-------------->访问的页面不存在");
+            return;
+        }
+//        stopLoadPage.isEnterESC=0;
 
         driver.switchTo().frame(driver.findElement(By.id("commentIframe")));
         for(int i=0;i<2;i++){

@@ -6,6 +6,7 @@ import com.trs.gfetch.guidescript.center.CctvNewsComment;
 import com.trs.gfetch.guidescript.center.PeopleNewsComment;
 import com.trs.gfetch.guidescript.center.ThepaperNewsComment;
 import com.trs.gfetch.guidescript.center.XinhuanetNewsComment;
+import com.trs.gfetch.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -15,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GuideDispatch {
     //准备运行的脚本
     static{
-        //新浪
+        //新浪---新浪新闻点赞不需要账号
         GuideAbstract.handlerMap.put("weibo.sina.repost",new SinaWeiboPostBrowser());
         GuideAbstract.handlerMap.put("news.sina.comment",new SinaNewsCommentBrowser());
         GuideAbstract.handlerMap.put("news.sina.digg",new SinaNewsCommentDigg());
@@ -39,6 +40,8 @@ public class GuideDispatch {
         GuideAbstract.handlerMap.put("news.cctv.comment",new CctvNewsComment());
         //澎湃网
         GuideAbstract.handlerMap.put("news.thepaper.comment",new ThepaperNewsComment());
+        //今日头条
+        GuideAbstract.handlerMap.put("news.toutiao.comment",new ToutiaoNewsComment());
     }
 
     public static void main(String[] args) throws Exception{
@@ -71,13 +74,28 @@ public class GuideDispatch {
      * 策略模式
      * jdk1.8使用Lambda遍历map
      */
-    public void guideDisp(Task task){
-        log.info("script:"+task.getType());
+    public static void guideDisp(Task task){
+        taskDecode(task);
+        System.out.println("script----------->"+task.getType());
+        System.out.println("address----------->"+task.getAddress());
         GuideAbstract.handlerMap.forEach((k,v)->{
             if(k.equals(task.getType())){
                 v.start(task);
             }
         });
+    }
+    /**
+     * 容易出错的格式化下
+     * @param task
+     */
+    public static void taskDecode(Task task){
+        task.setResult(StringUtil.decode(task.getResult()));
+        task.setAccount(StringUtil.decode(task.getAccount()));
+        task.setAddress(StringUtil.decode(task.getAddress()));
+        task.setCorpus(StringUtil.decode(task.getCorpus()));
+        task.setTitle(StringUtil.decode(task.getTitle()));
+        task.setDiggId(StringUtil.decode(task.getDiggId()));
+        task.setDiggContent(StringUtil.decode(task.getDiggContent()));
     }
 
 }

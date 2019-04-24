@@ -61,7 +61,7 @@ public class Wy163LoginBrowser {
                 try {
                     String userMsg = driver.findElement(By.xpath("//div[@id='cnt-box2']/div/div[2]/div[2]")).getText();//继续登录
                     if(StringUtils.isNotBlank(userMsg) && userMsg.contains("手机")){
-                        task.setCode(105);
+                        task.setCode(102);
                         task.setResult("建议你绑定手机");
                         return false;
                     }

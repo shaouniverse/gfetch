@@ -18,7 +18,7 @@ public class QQNewsCommentBrowser extends GuideAbstract {
 	public static void main(String[] args) {
 
 		Task task = new Task();
-		task.setAddress("http://bj.jjj.qq.com/a/20181114/002675.htm");
+		task.setAddress("http://bj.jjj.qq.com/a/20181114/002675_000.htm");
 
 		task.setAccount("2598532239");
 		task.setPassword("4211432a");
@@ -50,9 +50,13 @@ public class QQNewsCommentBrowser extends GuideAbstract {
 	public void toComment(){
 		try{
 			//打开转发地址
-			StopLoadPage stopLoadPage = new StopLoadPage();
+//			StopLoadPage stopLoadPage = new StopLoadPage();
 			driver.get(task.getAddress());
-			stopLoadPage.isEnterESC=0;
+			if(!QQLoginBrowser.judgeIsExsit(driver,task)){
+				System.out.println("-------------->访问的页面不存在");
+				return;
+			}
+//			stopLoadPage.isEnterESC=0;
 
 			driver = driver.switchTo().frame(driver.findElement(By.id("commentIframe")));
 

@@ -74,7 +74,7 @@ public class QQLoginBrowser {
                 return false;
             }
             if(currentUrl.contains("no_verifyimg")){
-                task.setCode(105);
+                task.setCode(102);
                 return false;
             }
 
@@ -165,7 +165,7 @@ public class QQLoginBrowser {
                 return false;
             }
             if(currentUrl.contains("no_verifyimg")){
-                task.setCode(105);
+                task.setCode(102);
                 return false;
             }
         } catch (InterruptedException e) {
@@ -221,5 +221,17 @@ public class QQLoginBrowser {
             sb.append(cookie.toString().substring(0,cookie.toString().indexOf(";"))+1);
         }
         return sb.toString();
+    }
+
+    /**
+     *
+     */
+    public static boolean judgeIsExsit(WebDriver driver,Task task){
+        if(driver.getCurrentUrl().contains("404")){
+            task.setCode(404);
+            task.setResult("访问的页面不存在");
+            return false;
+        }
+        return true;
     }
 }

@@ -6,7 +6,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
-import com.trs.gfetch.utils.DriverUtil;
 import com.trs.gfetch.utils.StopLoadPage;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -22,6 +21,7 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
     public static void main(String args[]){
         Task task = new Task();
         task.setAddress("http://news.sina.com.cn/o/2018-05-25/doc-ihcaqueu0706189.shtml");
+        task.setAddress("http://news.sina.com.cn/o/2018-05-25/doc-ihcaqueu0706189_00.shtml");
         task.setCorpus("看看情况吧");
         task.setAccount("lilei1929@163.com");
         task.setPassword("lilei419688..");
@@ -38,8 +38,17 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
     @Override
     public void toComment(){
         try {
+            //新闻页转评论页
             String address = formatAddress(task);
-            if(null == address) address = getCommentAddress(task,driver);
+            if(null == address){
+                driver.get(task.getAddress());
+                Thread.sleep(2000);
+                if(!SinaLoginBrowser.judgeIsExsit(driver,task)){
+                    System.out.println("-------------->访问的页面不存在");
+                    return;
+                }
+                address = getCommentAddress(task,driver);
+            }
             if(null == address){
                 task.setResult("查找评论链接失败");
                 task.setCode(402);
@@ -50,8 +59,13 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
             //打开转发地址
             StopLoadPage stopLoadPage = new StopLoadPage();
             driver.get(task.getAddress());
+            if(!SinaLoginBrowser.judgeIsExsit(driver,task)){
+                System.out.println("-------------->访问的页面不存在");
+                return;
+            }
             stopLoadPage.isEnterESC=0;
             Thread.sleep(1500);
+
             //输入预料
             WebElement commentArea = driver.findElement(By.xpath("//*[@id='SI_Wrap']/div[1]/div[1]/div/div[1]/div[2]/div[1]/div/textarea"));
             commentArea.clear();
@@ -66,8 +80,14 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
             }
             publicComment.click();
 
-            WebElement commentDiv = driver.findElement(By.xpath("//*[@id='SI_Wrap']/div[1]/div[1]/div/div[2]/div[2]/div[3]/div[1]"));
-            isSucc(driver,commentDiv,"sina");
+            try {
+                WebElement commentDiv = driver.findElement(By.xpath("//*[@id='SI_Wrap']/div[1]/div[1]/div/div[2]/div[2]/div[3]/div[1]"));
+                isSucc(driver,commentDiv,"sina");
+            } catch (Exception e) {
+                task.setCode(200);
+                task.setResult("发帖成功!");
+                System.out.println("----->成功与否判断失败");
+            }
         } catch (Exception e) {
             task.setCode(201);
             task.setResult("评论异常");
@@ -88,17 +108,17 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
         //是评论页,直接返回
         if(task.getAddress().contains("comment5.news.sina")) return task.getAddress();
 
-        WebClient webClient = new WebClient();
-        webClient.getOptions().setUseInsecureSSL(true);
-        webClient.getOptions().setJavaScriptEnabled(false);
-        webClient.getOptions().setCssEnabled(false);
-        webClient.getOptions().setThrowExceptionOnScriptError(false);
-        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-        webClient.getOptions().setTimeout(30000);
-
         HtmlPage htmlPage = null;
         String address = null;
         try {
+            WebClient webClient = new WebClient();
+            webClient.getOptions().setUseInsecureSSL(true);
+            webClient.getOptions().setJavaScriptEnabled(false);
+            webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+            webClient.getOptions().setTimeout(30000);
+
             htmlPage = webClient.getPage(task.getAddress());
             String result = htmlPage.asXml();
             if(task.getAddress().contains("sports")){
@@ -149,8 +169,6 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
      */
     public static String getCommentAddress(Task task,WebDriver driver){
         try {
-            driver.get(task.getAddress());
-            Thread.sleep(2000);
             String pageSource = driver.getPageSource();
 
             int cnindex = pageSource.indexOf("channel: '");

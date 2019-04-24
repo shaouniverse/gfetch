@@ -2,20 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>com.trs.jxwp</groupId>
+    <artifactId>jx-wp-fetch</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>江西网评引导端</name>
+    <packaging>jar</packaging>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.trs</groupId>
-    <artifactId>gfetch</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>gfetch</name>
-    <description>gfetch project for Spring Boot</description>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <mybatis.version>3.4.2</mybatis.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
     </properties>
 
     <dependencies>
@@ -71,8 +75,87 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration><!-- 跳过单元测试 -->
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <!-- springboot打包模块 -->
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layout>ZIP</layout>
+                    <!--去除在生产环境中不变的依赖 -->
+                    <!--<excludeArtifactIds>-->
+                    <!--trsckmsoap,-->
+                    <!--oscarJDBC,-->
+                    <!--ojdbc6-->
+                    <!--</excludeArtifactIds>-->
+                    <!--<excludeGroupIds>-->
+                    <!--org.springframework,-->
+                    <!--org.springframework.boot,-->
+                    <!--org.springframework.data,-->
+                    <!--org.springframework.session,-->
+                    <!--org.apache.tomcat.embed,-->
+                    <!--org.apache.tomcat,-->
+                    <!--org.apache.geronimo.components,-->
+                    <!--org.apache.geronimo.specs,-->
+                    <!--org.apache.poi,-->
+                    <!--org.apache.xmlbeans,-->
+                    <!--org.apache.xbean,-->
+                    <!--org.apache.httpcomponents,-->
+                    <!--org.apache.commons,-->
+                    <!--org.apache.axis,-->
+                    <!--org.mybatis,-->
+                    <!--org.mybatis.spring.boot,-->
+                    <!--org.projectlombok,-->
+                    <!--org.jboss.logging,-->
+                    <!--org.hibernate,-->
+                    <!--org.yaml,-->
+                    <!--org.slf4j,-->
+                    <!--com.fasterxml.jackson,-->
+                    <!--com.fasterxml.jackson.core,-->
+                    <!--com.fasterxml,-->
+                    <!--com.sun.mail,-->
+                    <!--com.github.virtuald,-->
+                    <!--com.ncs,-->
+                    <!--cn.ac.iie,-->
+                    <!--ch.qos.logback,-->
+                    <!--redis.clients,-->
+                    <!--javax.validation,-->
+                    <!--bundle,-->
+                    <!--mysql,-->
+                    <!--org.jfree,-->
+                    <!--axis,-->
+                    <!--jdom,-->
+                    <!--stax,-->
+                    <!--commons-discovery,-->
+                    <!--commons-fileupload,-->
+                    <!--commons-lang,-->
+                    <!--commons-codec,-->
+                    <!--commons-io,-->
+                    <!--commons-logging,-->
+                    <!--uk.org.lidalia,-->
+                    <!--org.antlr,-->
+                    <!--org.apache.avalon.framework,-->
+                    <!--net.arnx,-->
+                    <!--net.engio,-->
+                    <!--org.plutext,-->
+                    <!--antlr,-->
+                    <!--com.google.guava,-->
+                    <!--org.apache.xmlgraphics,-->
+                    <!--org.docx4j,-->
+                    <!--eu.bitwalker,-->
+                    <!--cims_sdk_java,-->
+                    <!--org.kairosdb,-->
+                    <!--com.google.code.findbugs,-->
+                    <!--com.google.code.gson,-->
+                    <!--commons-net,-->
+                    <!--com.alibaba-->
+                    <!--</excludeGroupIds>-->
+                </configuration>
             </plugin>
         </plugins>
     </build>

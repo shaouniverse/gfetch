@@ -25,6 +25,12 @@ public class IfengNewsCommentDigg extends GuideAbstract {
 
     @Override
     public void toComment() {
+        driver.get(task.getAddress());
+        if(!IfengLoginBrowser.judgeIsExsit(driver,task)){
+            System.out.println("-------------->访问的页面不存在");
+            return;
+        }
+        //非评论页点击到评论页
         IfengLoginBrowser.toCommentAddress(driver,task);
         //找到评论区
         int flag = 0;

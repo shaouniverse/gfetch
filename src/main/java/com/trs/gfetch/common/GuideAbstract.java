@@ -1,13 +1,10 @@
 package com.trs.gfetch.common;
 
 import com.trs.gfetch.entity.Task;
-import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
 import com.trs.gfetch.utils.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.filters.WebdavFixFilter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 
 import javax.imageio.ImageIO;
@@ -50,15 +47,13 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 			//登录
 			boolean suc = login();
 			if(!suc) toSend(task);
-			else{
-				toComment();
-			}
+			else toComment();
 		} catch (Exception e) {
 			e.printStackTrace();
 			task.setCode(201);
 			task.setResult("评论报错失败");
 		} finally {
-//			DriverUtil.quit(driver);
+			DriverUtil.quit(driver);
 			toSend(task);
 			log.info("任务结束");
 		}
@@ -81,6 +76,8 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 		FileUtil.deleteDirectoryFiles();
 		//保证只返回一次结果
 		isSend = true;
+		task.setCode(401);
+		task.setResult("默认发帖失败");
 		this.task = task;
 	}
 	/**
@@ -171,7 +168,7 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 			File file = new File(picName);
 			FileUtils.copyFile(screenshotAs, file);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("--------->(y + height) is outside of Raster");
 			log.info("截图失败!");
 		}
 		return picName;

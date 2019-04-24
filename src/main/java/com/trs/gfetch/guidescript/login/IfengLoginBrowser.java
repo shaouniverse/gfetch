@@ -24,7 +24,7 @@ public class IfengLoginBrowser {
             if(!succ) return false;
 
             if(driver.getPageSource().contains("未绑定")){
-                task.setCode(105);
+                task.setCode(102);
                 task.setResult("账号需认证");
             }
             return true;
@@ -71,24 +71,12 @@ public class IfengLoginBrowser {
     //切换到评论地址
     public static void toCommentAddress(WebDriver driver,Task task){
         try {
-            driver.get(task.getAddress());
-            Thread.sleep(1000);
             //非评论页的话,点击到评论页
             if(!task.getAddress().contains("gentie")){
-                driver.findElement(By.className("text-2HpRlQLh")).click();
+                WebElement aboutLink = driver.findElement(By.partialLinkText("人参与"));
+                aboutLink.click();
                 switchToNewWindow(driver);
                 Thread.sleep(2000);
-
-                driver.findElement(By.xpath("//*[@id='js_cmtContainer']/div[6]/div[2]/form/div[1]/textarea"))
-                        .sendKeys(task.getCorpus());
-                driver.findElement(By.xpath("//*[@id='js_cmtContainer']/div[6]/div[2]/form/div[2]/a")).click();
-
-                Thread.sleep(1500);
-                if(driver.getPageSource().contains("allsite/loginmob")){
-                    task.setCode(105);
-                    task.setResult("需要手机核验");
-                    return ;
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,5 +94,20 @@ public class IfengLoginBrowser {
             driver.switchTo().window(it.next());
         }
 
+    }
+
+    /**
+     * 判断链接是否存在
+     * @param driver
+     * @param task
+     * @return
+     */
+    public static boolean judgeIsExsit(WebDriver driver,Task task){
+        if(driver.getTitle().contains("404")){
+            task.setCode(404);
+            task.setResult("访问的页面不存在");
+            return false;
+        }
+        return true;
     }
 }

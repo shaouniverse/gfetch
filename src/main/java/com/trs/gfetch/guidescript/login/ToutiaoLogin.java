@@ -27,7 +27,7 @@ public class ToutiaoLogin {
             driver.findElement(By.id("password")).clear();
             driver.findElement(By.id("password")).sendKeys(task.getPassword());
             Thread.sleep(500);
-            driver.findElement(By.id("bytedance-SubmitStatic")).click();
+            driver.findElement(By.id("bytedance-login-submit")).click();
             Thread.sleep(1000);
             boolean code = dragCode(driver);
             if(!code){
@@ -67,26 +67,31 @@ public class ToutiaoLogin {
             try {
                 Thread.sleep(1000 * 2);
                 WebElement vdiv = driver.findElement(By.id("validate-big"));
-                //获得验证码图片
-                String codeAddress = vdiv.getAttribute("src");
-//                String param = getParam(codeAddress);
-                String param = "100,200";
+                if(vdiv.isDisplayed()){
+                    //获得验证码图片
+                    String codeAddress = vdiv.getAttribute("src");
+                    String param = getParam(codeAddress);
+//                  String param = "100,200";
 
-                Actions actions = new Actions(driver);
-                WebElement button = driver.findElement(By.className("drag-button"));
+                    Actions actions = new Actions(driver);
+                    WebElement button = driver.findElement(By.className("drag-button"));
 
-                int x = GuideAbstract.resetXY(GuideAbstract.getXY(Integer.parseInt(param.split(",")[0])));
-                System.out.println("x=="+x);
-                Thread.sleep(500);
-                actions.dragAndDropBy(button, 200, 0).perform();//第一次
+                    int x = GuideAbstract.resetXY(GuideAbstract.getXY(Integer.parseInt(param.split(",")[0])));
+                    System.out.println("x=="+x);
+                    Thread.sleep(500);
+                    actions.dragAndDropBy(button, 200, 0).perform();//第一次
 
-                Thread.sleep(1000);
-                if(driver.findElement(By.id("verify-container")).isDisplayed()){
-                    System.out.println("滑动失败,继续 "+(m+1));
-                    continue;
+                    Thread.sleep(1000);
+                    if(driver.findElement(By.id("verify-container")).isDisplayed()){
+                        System.out.println("滑动失败,继续 "+(m+1));
+                        continue;
+                    }else{
+                        flag = true;
+                        break;
+                    }
                 }else{
-                    flag = true;
-                    break;
+                    System.out.println("----->没有验证码");
+                    return true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -110,6 +115,21 @@ public class ToutiaoLogin {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 判断链接是否存在
+     * @param driver
+     * @param task
+     * @return
+     */
+    public static boolean judgeIsExsit(WebDriver driver,Task task){
+        if(driver.getTitle().contains("404")){
+            task.setCode(404);
+            task.setResult("访问的页面不存在");
+            return false;
+        }
+        return true;
     }
 
 }

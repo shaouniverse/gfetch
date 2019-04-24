@@ -1,41 +1,32 @@
 package com.trs.gfetch.utils;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class StringUtil {
 
-    static final Base64.Encoder encoder = Base64.getEncoder();
-    static final Base64.Decoder decoder = Base64.getDecoder();
+    //URLEncoder
+    public static String encode(String str){
+        if(str==null) return str;
+        try {
+            str = URLEncoder.encode(str,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+    //URLDecoder
+    public static String decode(String str){
+        if(str==null) return str;
+        try {
+            str = URLDecoder.decode(str,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
 
-    /**
-     * 字符串base64,encoder
-     * @param text
-     * @return
-     */
-    public static String encoder(String text){
-        try {
-            final byte[] textByte = text.getBytes("UTF-8");
-            //编码
-            return encoder.encodeToString(textByte);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    /**
-     * 字符串base64,decoder
-     * @param encodedText
-     * @return
-     */
-    public static String decoder(String encodedText){
-        try {
-            return new String(decoder.decode(encodedText), "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
     /**
      * url编码
      * @param str

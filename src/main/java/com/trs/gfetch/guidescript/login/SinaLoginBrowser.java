@@ -36,25 +36,32 @@ public class SinaLoginBrowser {
 			loginButton.click();
 
 			Thread.sleep(4000);
-			try{
+			try {
 				WebElement imgCode = driver.findElement(By.id("check_img"));
+				if(imgCode.isDisplayed()){
+					try{
+						String code = getPicCode(driver, imgCode);
+						System.out.println("验证码:"+code);
+						WebElement codePut = driver.findElement(By.id("door"));
+						codePut.clear();
+						codePut.sendKeys(code);
 
-				String code = getPicCode(driver, imgCode);
-				System.out.println("验证码:"+code);
-				WebElement codePut = driver.findElement(By.id("door"));
-				codePut.clear();
-				codePut.sendKeys(code);
+						WebElement loginButton2 = driver.findElement(By.xpath("//*[@id='vForm']/div[2]/div/ul/li[7]/div[1]/input"));
+						loginButton2.click();
+						Thread.sleep(2000);
+					}catch(Exception e){
+						System.out.println("可能无验证码");
+						System.out.println("可能无验证码");
+					}
+				}else{
+					System.out.println("无验证码");
+					System.out.println("无验证码");
+				}
+			}catch (Exception e){}
 
-				WebElement loginButton2 = driver.findElement(By.xpath("//*[@id='vForm']/div[2]/div/ul/li[7]/div[1]/input"));
-				loginButton2.click();
-				Thread.sleep(2000);
-			}catch(Exception e){
-				System.out.println("无验证码");
-				System.out.println("无验证码");
-			}
 			String currentUrl = driver.getCurrentUrl();
 			Thread.sleep(200);
-			if(StringUtils.isNotBlank(currentUrl) && currentUrl.contains("login.login.com")){
+			if(StringUtils.isNotBlank(currentUrl) && currentUrl.contains("login.sina.com")){
 				try {
 					WebElement error = driver.findElement(By.xpath("//*[@id='login_err']/span/i[2]"));
 					System.out.println("error.getText()=="+error.getText());
@@ -109,5 +116,20 @@ public class SinaLoginBrowser {
 		String code = RuoKuai.createByPostNew("3000", GuideAbstract.picCode+codeName);
 
 		return code;
+	}
+
+	/**
+	 * 判断页面是否存在
+	 * @param driver
+	 * @param task
+	 * @return
+	 */
+	public static boolean judgeIsExsit(WebDriver driver,Task task){
+		if(driver.getTitle().contains("页面没有")){
+			task.setCode(404);
+			task.setResult("访问的页面不存在");
+			return false;
+		}
+		return true;
 	}
 }

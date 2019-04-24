@@ -48,7 +48,11 @@ public class SohuNewsCommentBrowser extends GuideAbstract {
             commentDiv = driver.findElement(By.xpath("//*[@id=\"mpbox\"]/div[4]/div/div[2]/div[1]/div[2]"));
             log.info("进入第二种方式");
         }
-        isSucc(driver,commentDiv,"sohu");
+        try {
+            isSucc(driver,commentDiv,"sohu");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
