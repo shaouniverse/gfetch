@@ -24,11 +24,13 @@ public class Task implements Serializable {
 	private String title;//执行标题
 	private Integer failTimes; //失败次数
 
-
 	private String diggId;//点赞id
 	private String diggContent;//点赞内容
 	private String type;//执行类型--调用哪个脚本
 	private Integer otherOpera;//附加数据--比如同时转发...
+
+	private String proxyIP = "";		//代理ip
+	private Integer proxyPort = 0;	//代理ip端口
 
 	private String remark1;//备用1
 	private String remark2;//备用2

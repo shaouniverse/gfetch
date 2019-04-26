@@ -20,7 +20,7 @@ public class SohuNewsCommentDigg extends GuideAbstract {
         task.setAddress("http://www.sohu.com/a/290910910_119038?code=55e53ae603a03f65c59ec67485af8e29&_f=index_chan08cpc_0");
         task.setAccount("15626027805");
         task.setPassword("mm949811");
-        task.setDiggContent("持习主席的讲话，居安思危");
+        task.setDiggContent("居安思危，思则有备，有备无患");
 
         new SohuNewsCommentDigg().start(task);
     }

@@ -41,7 +41,8 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 	public abstract boolean login();//执行登录
 	//真正运行
 	public void run() {
-		driver = DriverUtil.getDriver();
+		driver = DriverUtil.getDriverProxy(task.getProxyIP(),task.getProxyPort());
+//		driver = DriverUtil.getDriver();
 		driver.manage().window().maximize();
 		try {
 			//登录
@@ -53,7 +54,7 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 			task.setCode(201);
 			task.setResult("评论报错失败");
 		} finally {
-			DriverUtil.quit(driver);
+//			DriverUtil.quit(driver);
 			toSend(task);
 			log.info("任务结束");
 		}

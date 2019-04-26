@@ -14,7 +14,10 @@ import java.util.Set;
 public class DriverUtil {
 
 	private DriverUtil(){}
-	
+	//代理ip
+	private static String proxyIP = "";
+	private static int proxyPort = 0;
+
 	public static void main(String[] args) throws Exception{
 		WebDriver driver = getDriver();
 		driver.get("https://blog.csdn.net/yoyocat915/article/details/81772422");
@@ -28,6 +31,17 @@ public class DriverUtil {
 	 * @return
 	 */
 	public static WebDriver getDriver(){
+		proxyIP = "";
+		return produceDriver();
+	}
+	/**
+	 * 获得driver
+	 * @return
+	 */
+	public static WebDriver getDriverProxy(String ip,int port){
+		proxyIP = "";
+		proxyIP = ip;
+		proxyPort = port;
 		return produceDriver();
 	}
 
@@ -48,6 +62,9 @@ public class DriverUtil {
                 System.out.println("webdriver.gecko.driver-------->"+propertiesConfig.geckodriver);
                 System.out.println("propertiesConfig.firefoxurl-------->"+propertiesConfig.firefoxurl);
                 options.setBinary(propertiesConfig.firefoxurl);
+				//设置代理ip
+				proxyIp(options);
+
                 return new FirefoxDriver(options);
             }catch (Exception e){
                 System.out.println("----------->本地调用");
@@ -56,6 +73,9 @@ public class DriverUtil {
 				System.out.println("------>spring未启动,直接写死的URL地址");
 				System.out.println("firefoxurl-------->D:\\Program Files\\Mozilla Firefox\\firefox.exe");
 				options.setBinary("D:\\Program Files\\Mozilla Firefox\\firefox.exe");
+				//设置代理ip
+				proxyIp(options);
+
                 return new FirefoxDriver(options);
 			}
 		}
@@ -100,11 +120,7 @@ public class DriverUtil {
 		executor.executeScript("arguments[0].click();",element);
 	}
 
-	/**
-	 * 滚动到当前元素
-	 * @param driver
-	 * @param element
-	 */
+	//滚动到当前元素
 	public static void moveMouseToElement(WebDriver driver,WebElement element){
 		//找到元素位置,并滚动鼠标到该位置
 		Point point = element.getLocation();
@@ -112,6 +128,15 @@ public class DriverUtil {
 		JavascriptExecutor web= (JavascriptExecutor)driver;
 		String js = String.format("window.scroll(0, %s)", y);
 		web.executeScript(js);
+	}
+	//滚动到当前页最底部
+	public static void scrollToButtom(WebDriver driver){
+		//找到元素位置,并滚动鼠标到该位置
+		JavascriptExecutor driver_js= (JavascriptExecutor) driver;
+		//将页面滚动条拖到底部
+		driver_js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+		//#将页面滚动条拖到顶部
+//		driver_js.executeScript("window.scrollTo(0,0)");
 	}
 
 	/**
@@ -134,6 +159,24 @@ public class DriverUtil {
 		String js = "var q=document.documentElement.scrollTop="+y;
 		JavascriptExecutor jj= (JavascriptExecutor)driver;
 		jj.executeScript(js);
+	}
+
+	public static void proxyIp(FirefoxOptions options){
+		//设置代理ip
+		if(proxyIP != null && !proxyIP.equals("")){
+			FirefoxProfile profile = new FirefoxProfile();
+			profile.setPreference("network.proxy.type", 1);
+
+			profile.setPreference("network.proxy.http", proxyIP);
+			profile.setPreference("network.proxy.http_port", proxyPort);
+			profile.setPreference("network.proxy.ssl", proxyIP);
+			profile.setPreference("network.proxy.ssl_port", proxyPort);
+			profile.setPreference("network.proxy.ftp", proxyIP);
+			profile.setPreference("network.proxy.ftp_port", proxyPort);
+			profile.setPreference("network.proxy.socks", proxyIP);
+			profile.setPreference("network.proxy.socks_port", proxyPort);
+			options.setProfile(profile);
+		}
 	}
 
 }

@@ -17,8 +17,8 @@ public class IfengNewsCommentDigg extends GuideAbstract {
         Task task = new Task();
         task.setAccount("13042079465");
         task.setPassword("qqqwww");
-        task.setDiggContent("老王分到了一块大蛋糕很激动");
-        task.setAddress("http://news.ifeng.com/c/7jif5wjVjqu");
+        task.setDiggContent("在列强环伺的中东地区，以色列愈战愈勇、勇战愈强");
+        task.setAddress("https://history.ifeng.com/c/7m52Sgtlzkm");
 
         new IfengNewsCommentDigg().start(task);
     }

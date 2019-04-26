@@ -15,8 +15,10 @@ public class Wy163NewsCommentDigg extends GuideAbstract {
         Task task = new Task();
         task.setAccount("augy00@163.com");
         task.setPassword("qg2048");
-        task.setAddress("https://news.163.com/19/0104/05/E4LDKEN10001875O.html");
-        task.setDiggContent("非法移民大军在边境的神助攻，民主党在边境问题必输。");
+        task.setAddress("https://sports.163.com/19/0425/10/EDJQLGCF0005877V.html");
+        task.setDiggContent("并未出战过发展联盟的比赛");
+        task.setProxyIP("111.26.9.26");
+        task.setProxyPort(80);
         new Wy163NewsCommentDigg().start(task);
     }
 

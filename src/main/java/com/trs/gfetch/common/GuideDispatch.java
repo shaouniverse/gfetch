@@ -23,10 +23,10 @@ public class GuideDispatch {
         //腾讯
         GuideAbstract.handlerMap.put("news.qq.comment",new QQNewsCommentBrowser());
         GuideAbstract.handlerMap.put("news.qq.digg",new QQNewsCommentDigg());
-        //搜狐
+        //搜狐---digg right
         GuideAbstract.handlerMap.put("news.sohu.comment",new SohuNewsCommentBrowser());
         GuideAbstract.handlerMap.put("news.sohu.digg",new SohuNewsCommentDigg());
-        //凤凰
+        //凤凰---digg right
         GuideAbstract.handlerMap.put("news.ifeng.comment",new IfengNewsCommentBrowser());
         GuideAbstract.handlerMap.put("news.ifeng.digg",new IfengNewsCommentDigg());
         //网易

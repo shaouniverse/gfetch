@@ -85,6 +85,7 @@ public class Wy163LoginBrowser {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -124,11 +125,13 @@ public class Wy163LoginBrowser {
                 Actions actions = new Actions(driver);
                 WebElement button = driver.findElement(By.className("yidun_slider__icon"));
                 int x = GuideAbstract.getXY(Integer.parseInt(param.split(",")[0]));
-                if(x>180) x = x-75;
+//                int x = Integer.parseInt(param.split(",")[0]);
+                System.out.println("----->x原数据: "+param.split(",")[0]+"--分辨率后->"+x);
+                if(x>180) x = x-80;
                 else if(x<60) x = x-30;
                 else x = x-50;
-                System.out.println("x=="+x);
-                actions.dragAndDropBy(button, x, GuideAbstract.getXY(Integer.parseInt(param.split(",")[1]))).perform();//第一次
+                System.out.println("----->x最终: "+x);
+                actions.dragAndDropBy(button, x, 0).perform();//第一次
 
                 Thread.sleep(1000);
                 String errmsg = "";
