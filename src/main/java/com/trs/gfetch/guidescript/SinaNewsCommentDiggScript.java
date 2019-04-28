@@ -3,6 +3,7 @@ package com.trs.gfetch.guidescript;
 import com.alibaba.fastjson.JSONObject;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class SinaNewsCommentDiggScript extends GuideAbstract {
         if(null == address){
             driver.get(task.getAddress());
             Thread.sleep(2000);
-            if(!SinaLoginBrowser.judgeIsExsit(driver,task)){
+            if(!Judge404.judgeIsExsit(driver,task)){
                 System.out.println("-------------->访问的页面不存在");
                 return;
             }

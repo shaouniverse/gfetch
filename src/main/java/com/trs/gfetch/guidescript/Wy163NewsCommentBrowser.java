@@ -2,6 +2,7 @@ package com.trs.gfetch.guidescript;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.guidescript.login.Wy163LoginBrowser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -38,6 +39,10 @@ public class Wy163NewsCommentBrowser extends GuideAbstract {
     public void comment(){
         try {
             driver.get(task.getAddress());
+            if(!Judge404.judgeIsExsit(driver,task)){
+                System.out.println("-------------->访问的页面不存在");
+                return;
+            }
             Thread.sleep(2000);
 
             try {

@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
 import com.trs.gfetch.utils.StopLoadPage;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
             if(null == address){
                 driver.get(task.getAddress());
                 Thread.sleep(2000);
-                if(!SinaLoginBrowser.judgeIsExsit(driver,task)){
+                if(!Judge404.judgeIsExsitSina(driver,task)){
                     System.out.println("-------------->访问的页面不存在");
                     return;
                 }
@@ -59,7 +60,7 @@ public class SinaNewsCommentBrowser extends GuideAbstract {
             //打开转发地址
             StopLoadPage stopLoadPage = new StopLoadPage();
             driver.get(task.getAddress());
-            if(!SinaLoginBrowser.judgeIsExsit(driver,task)){
+            if(!Judge404.judgeIsExsitSina(driver,task)){
                 System.out.println("-------------->访问的页面不存在");
                 return;
             }

@@ -1,6 +1,7 @@
 package com.trs.gfetch.utils;
 
 import com.trs.gfetch.config.PropertiesConfig;
+import com.trs.gfetch.entity.Task;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -19,7 +20,10 @@ public class DriverUtil {
 	private static int proxyPort = 0;
 
 	public static void main(String[] args) throws Exception{
-		WebDriver driver = getDriver();
+		Task task = new Task();
+		task.setProxyPort(8080);
+		task.setProxyIP("123.56.3.3");
+		WebDriver driver = getProxyDriver(task);
 		driver.get("https://blog.csdn.net/yoyocat915/article/details/81772422");
 		Thread.sleep(1000*10);
 		driver.quit();
@@ -36,12 +40,14 @@ public class DriverUtil {
 	}
 	/**
 	 * 获得driver
+	 * Task
 	 * @return
+	 * 代理ip不行的话,页面加载不出来
 	 */
-	public static WebDriver getDriverProxy(String ip,int port){
+	public static WebDriver getProxyDriver(Task task){
 		proxyIP = "";
-		proxyIP = ip;
-		proxyPort = port;
+		proxyIP = task.getProxyIP();
+		proxyPort = task.getProxyPort();
 		return produceDriver();
 	}
 
@@ -68,7 +74,8 @@ public class DriverUtil {
                 return new FirefoxDriver(options);
             }catch (Exception e){
                 System.out.println("----------->本地调用");
-                System.setProperty("webdriver.gecko.driver","target/classes/templates/geckodriver_0-24.exe");
+//                System.setProperty("webdriver.gecko.driver","target/classes/templates/geckodriver_0-24.exe");
+                System.setProperty("webdriver.gecko.driver","C:\\geckodriver_0-24.exe");
                 FirefoxOptions options = new FirefoxOptions();
 				System.out.println("------>spring未启动,直接写死的URL地址");
 				System.out.println("firefoxurl-------->D:\\Program Files\\Mozilla Firefox\\firefox.exe");

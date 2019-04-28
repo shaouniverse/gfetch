@@ -2,6 +2,7 @@ package com.trs.gfetch.guidescript;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
 import com.trs.gfetch.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +58,10 @@ public class SinaWeiboPostBrowser extends GuideAbstract {
 	@Override
 	public void toComment() throws Exception{
 		driver.get(task.getAddress());
+		if(!Judge404.judgeIsExsit(driver,task)){
+			System.out.println("-------------->访问的页面不存在");
+			return;
+		}
 		//输入语料
 		if(task.getCorpus().length()>0){
 			//转发语料最大限制为140

@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GuideDispatch {
     //准备运行的脚本
     static{
-        //新浪---新浪新闻点赞不需要账号
+        //新浪---新浪新闻点赞不需要账号---digg right
         GuideAbstract.handlerMap.put("weibo.sina.repost",new SinaWeiboPostBrowser());
         GuideAbstract.handlerMap.put("news.sina.comment",new SinaNewsCommentBrowser());
         GuideAbstract.handlerMap.put("news.sina.digg",new SinaNewsCommentDigg());

@@ -1,30 +1,21 @@
 package com.trs.gfetch.guidescript;
 
-import com.alibaba.fastjson.JSONObject;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
-import com.trs.gfetch.guidescript.login.SinaLoginBrowser;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.utils.DriverUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 public class SinaNewsCommentDigg extends GuideAbstract {
 
     public static void main(String args[]){
         Task task = new Task();
         //channel=gn&newsid=comos-hrfqziz9914444&mid=5C4696ED-B6306283-593D569F-862-8CE
-        task.setDiggContent("让妈祖劝劝爱人");
-        task.setAddress("https://news.sina.com.cn/o/2019-04-25/doc-ihvhiqax5043013.shtml");
+        task.setDiggContent("明朝一王妃的墓葬陪葬品，不是找到了八枚铜钱");
+        task.setAddress("https://news.sina.com.cn/s/2019-04-27/doc-ihvhiqax5408776.shtml");
 
         new SinaNewsCommentDigg().start(task);
     }
@@ -42,7 +33,7 @@ public class SinaNewsCommentDigg extends GuideAbstract {
         if(null == address){
             driver.get(task.getAddress());
             Thread.sleep(2000);
-            if(!SinaLoginBrowser.judgeIsExsit(driver,task)){
+            if(!Judge404.judgeIsExsitSina(driver,task)){
                 System.out.println("-------------->访问的页面不存在");
                 return;
             }

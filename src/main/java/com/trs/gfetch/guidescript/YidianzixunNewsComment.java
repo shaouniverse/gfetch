@@ -2,6 +2,7 @@ package com.trs.gfetch.guidescript;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.guidescript.login.YidianzixunLogin;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -22,6 +23,10 @@ public class YidianzixunNewsComment extends GuideAbstract {
     @Override
     public void toComment() throws Exception {
         driver.get(task.getAddress());
+        if(!Judge404.judgeIsExsitYidianzhixun(driver,task)){
+            System.out.println("-------------->访问的页面不存在");
+            return;
+        }
         Thread.sleep(500);
         driver.findElement(By.className("comment-input")).sendKeys(task.getCorpus());
         driver.findElement(By.className("add-comment-btn")).click();

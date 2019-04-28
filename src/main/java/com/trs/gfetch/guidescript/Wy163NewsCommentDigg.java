@@ -2,6 +2,7 @@ package com.trs.gfetch.guidescript;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.guidescript.login.Wy163LoginBrowser;
 import com.trs.gfetch.utils.DriverUtil;
 import org.openqa.selenium.By;
@@ -32,6 +33,10 @@ public class Wy163NewsCommentDigg extends GuideAbstract {
             return;
         }
         driver.get(commentAddress);
+        if(!Judge404.judgeIsExsit(driver,task)){
+            System.out.println("-------------->访问的页面不存在");
+            return;
+        }
         for (int i=0;i<3;i++){
             int suc = digg();
             if(suc==1){

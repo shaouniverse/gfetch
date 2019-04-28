@@ -2,6 +2,7 @@ package com.trs.gfetch.guidescript;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.guidescript.login.ToutiaoLogin;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -21,7 +22,7 @@ public class ToutiaoNewsComment extends GuideAbstract {
     @Override
     public void toComment() throws Exception {
         driver.get(task.getAddress());
-        if(!ToutiaoLogin.judgeIsExsit(driver,task)) return;
+        if(!Judge404.judgeIsExsit(driver,task)) return;
 
         driver.findElement(By.xpath("//*[@id=\"comment\"]/div[2]/div/div[2]/div[1]/textarea")).sendKeys(task.getCorpus());
         driver.findElement(By.className("c-submit")).click();

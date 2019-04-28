@@ -3,6 +3,7 @@ package com.trs.gfetch.guidescript;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.guidescript.login.IfengLoginBrowser;
+import com.trs.gfetch.guidescript.login.Judge404;
 import com.trs.gfetch.utils.DriverUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -26,7 +27,7 @@ public class IfengNewsCommentDigg extends GuideAbstract {
     @Override
     public void toComment() {
         driver.get(task.getAddress());
-        if(!IfengLoginBrowser.judgeIsExsit(driver,task)){
+        if(!Judge404.judgeIsExsit(driver,task)){
             System.out.println("-------------->访问的页面不存在");
             return;
         }

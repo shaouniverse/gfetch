@@ -31,6 +31,7 @@ public class MQSender {
 			PropertiesConfig propertiesConfig = (PropertiesConfig) SpringUtil.getObject("propertiesConfig");
 			url = propertiesConfig.mqsenderurl;
 		}catch (Exception e){
+			System.out.println("---------->写死的地址");
 			url = "http://118.190.172.70:8088/proMQ/msg/addMsgResult.do";
 		}
 		System.out.println("url---->"+url);

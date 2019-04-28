@@ -223,15 +223,4 @@ public class QQLoginBrowser {
         return sb.toString();
     }
 
-    /**
-     *
-     */
-    public static boolean judgeIsExsit(WebDriver driver,Task task){
-        if(driver.getCurrentUrl().contains("404")){
-            task.setCode(404);
-            task.setResult("访问的页面不存在");
-            return false;
-        }
-        return true;
-    }
 }

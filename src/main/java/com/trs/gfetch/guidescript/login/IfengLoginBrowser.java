@@ -96,18 +96,4 @@ public class IfengLoginBrowser {
 
     }
 
-    /**
-     * 判断链接是否存在
-     * @param driver
-     * @param task
-     * @return
-     */
-    public static boolean judgeIsExsit(WebDriver driver,Task task){
-        if(driver.getTitle().contains("404")){
-            task.setCode(404);
-            task.setResult("访问的页面不存在");
-            return false;
-        }
-        return true;
-    }
 }
