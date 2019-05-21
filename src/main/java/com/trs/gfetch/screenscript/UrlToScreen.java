@@ -29,7 +29,7 @@ public class UrlToScreen {
         Task task = new Task();
 //        task.setAddress("https://segmentfault.com/q/1010000013658145");
         task.setAddress("https://www.sina.com.cn/");
-        task.setCorpus("入选国家队#任正非");
+        task.setCorpus("根子在美国对华遏制政策");
         task.setId(2);
         toScreen(task);
     }

@@ -22,7 +22,7 @@ public class DriverUtil {
 	public static void main(String[] args) throws Exception{
 		Task task = new Task();
 		task.setProxyPort(8080);
-		task.setProxyIP("123.56.3.3");
+		task.setProxyIp("123.56.3.3");
 		WebDriver driver = getProxyDriver(task);
 		driver.get("https://blog.csdn.net/yoyocat915/article/details/81772422");
 		Thread.sleep(1000*10);
@@ -46,8 +46,8 @@ public class DriverUtil {
 	 */
 	public static WebDriver getProxyDriver(Task task){
 		proxyIP = "";
-		proxyIP = task.getProxyIP();
-		proxyPort = task.getProxyPort();
+		proxyIP = task.getProxyIp();
+		proxyPort = task.getProxyPort()==null?0:task.getProxyPort();
 		return produceDriver();
 	}
 

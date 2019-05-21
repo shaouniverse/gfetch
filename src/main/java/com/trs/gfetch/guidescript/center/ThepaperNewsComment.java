@@ -55,7 +55,7 @@ public class ThepaperNewsComment extends GuideAbstract {
     public boolean loginCode(){
         for(int i=0;i<5;i++){
             WebElement picCode = driver.findElement(By.id("annexCode2"));
-            String code = getVerificationCode(driver,picCode,"thepaper","3040");
+            String code = getVerificationCode(driver,picCode,"thepaper",1007);
             WebElement codeInput = driver.findElement(By.id("lg_wds_dynCode"));
             codeInput.clear();codeInput.sendKeys(code);
 

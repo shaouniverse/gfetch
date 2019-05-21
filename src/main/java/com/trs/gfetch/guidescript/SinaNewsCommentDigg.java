@@ -14,8 +14,8 @@ public class SinaNewsCommentDigg extends GuideAbstract {
     public static void main(String args[]){
         Task task = new Task();
         //channel=gn&newsid=comos-hrfqziz9914444&mid=5C4696ED-B6306283-593D569F-862-8CE
-        task.setDiggContent("明朝一王妃的墓葬陪葬品，不是找到了八枚铜钱");
-        task.setAddress("https://news.sina.com.cn/s/2019-04-27/doc-ihvhiqax5408776.shtml");
+        task.setDiggContent("玩命啊这是");
+        task.setAddress("https://news.sina.com.cn/s/2019-05-06/doc-ihvhiqax6805935.shtml");
 
         new SinaNewsCommentDigg().start(task);
     }
@@ -29,41 +29,28 @@ public class SinaNewsCommentDigg extends GuideAbstract {
 
     @Override
     public void toComment() throws Exception {
-        String address = SinaNewsCommentBrowser.formatAddress(task);
-        if(null == address){
-            driver.get(task.getAddress());
-            Thread.sleep(2000);
-            if(!Judge404.judgeIsExsitSina(driver,task)){
-                System.out.println("-------------->访问的页面不存在");
-                return;
-            }
-            address = SinaNewsCommentBrowser.getCommentAddress(task,driver);
+        if(!Judge404.judgeIsExsitSina(driver,task)){
+            System.out.println("-------------->访问的页面不存在");
+            return;
         }
-        if(null == address){
-            task.setResult("查找评论链接失败");
-            task.setCode(402);
-            return ;
-        }
-        task.setAddress(address);
-        //不需要账号点两次
-        for(int i=0;i<2;i++){
-            driver.get(task.getAddress());
-            //滚动到底部获得第一页
-            DriverUtil.scrollToButtom(driver);
-            Thread.sleep(1500);
-            //滚动到底部获得第二页
-            DriverUtil.scrollToButtom(driver);
-            Thread.sleep(1500);
+        driver.findElement(By.xpath("//a[contains(@href,\"comment5.news.sina\")]")).click();
+        DriverUtil.switchToNewWindow(driver);
+        Thread.sleep(1500);
+        //滚动到底部获得第一页
+        DriverUtil.scrollToButtom(driver);
+        Thread.sleep(1500);
+        //滚动到底部获得第二页
+        DriverUtil.scrollToButtom(driver);
+        Thread.sleep(1500);
 
-            boolean flag = findElementDigg();
+        boolean flag = findElementDigg();
 
-            if(flag){
-                task.setCode(200);
-                task.setResult("点赞成功");
-            }else{
-                task.setCode(401);
-                task.setResult("点赞失败");
-            }
+        if(flag){
+            task.setCode(200);
+            task.setResult("点赞成功");
+        }else{
+            task.setCode(401);
+            task.setResult("点赞失败");
         }
 
     }

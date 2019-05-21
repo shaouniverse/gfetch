@@ -1,6 +1,7 @@
 package com.trs.gfetch.guidescript.login;
 
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.utils.App2PcAddress;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -23,6 +24,17 @@ public class Judge404 {
      * 新浪--->判断页面是否存在
      */
     public static boolean judgeIsExsitSina(WebDriver driver,Task task){
+        String address = task.getAddress();
+        try {
+            address = App2PcAddress.appSina(address);
+            task.setAddress(address);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("APP链接转换失败-------------------->");
+            task.setCode(404);
+            return false;
+        }
+        driver.get(task.getAddress());
         if(driver.getTitle().contains("页面没有") || driver.getTitle().contains("载入出错")){
             task.setCode(404);
             task.setResult("访问的页面不存在/代理错误");

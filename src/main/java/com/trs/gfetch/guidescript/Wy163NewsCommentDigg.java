@@ -18,7 +18,7 @@ public class Wy163NewsCommentDigg extends GuideAbstract {
         task.setPassword("qg2048");
         task.setAddress("https://sports.163.com/19/0425/10/EDJQLGCF0005877V.html");
         task.setDiggContent("并未出战过发展联盟的比赛");
-        task.setProxyIP("111.26.9.26");
+        task.setProxyIp("111.26.9.26");
         task.setProxyPort(80);
         new Wy163NewsCommentDigg().start(task);
     }

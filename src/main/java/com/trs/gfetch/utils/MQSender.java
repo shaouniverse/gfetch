@@ -32,7 +32,7 @@ public class MQSender {
 			url = propertiesConfig.mqsenderurl;
 		}catch (Exception e){
 			System.out.println("---------->写死的地址");
-			url = "http://118.190.172.70:8088/proMQ/msg/addMsgResult.do";
+			url = "http://119.254.0.252:28161/proMQ/msg/addMsgResult.do";
 		}
 		System.out.println("url---->"+url);
 		System.out.println("-------->发送到mq");

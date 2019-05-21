@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.utils.RuoKuai;
+import com.trs.gfetch.utils.Yzm91;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -117,7 +118,7 @@ public class Wy163LoginBrowser {
                     String attr = element.attr("src");
                     if(StringUtils.isNotBlank(attr) && attr.contains("necaptcha")){
                         //<img style="border-radius: 2px" class="yidun_bg-img" src="https://necaptcha.nosdn.127.net/fea0a111fd1a498c8f6c51a51e6d38bf.jpg" />
-                        param = getParam(attr);
+                        param = Yzm91.getCodeResultDrap(attr,"wy163");
                         break img;
                     }
                 }
@@ -127,9 +128,10 @@ public class Wy163LoginBrowser {
                 int x = GuideAbstract.getXY(Integer.parseInt(param.split(",")[0]));
 //                int x = Integer.parseInt(param.split(",")[0]);
                 System.out.println("----->x原数据: "+param.split(",")[0]+"--分辨率后->"+x);
-                if(x>180) x = x-80;
-                else if(x<60) x = x-30;
-                else x = x-50;
+//                if(x>230) x = x-60;
+//                else if(x>180) x = x-55;
+//                else if(x<60) x = x-10;
+//                else x = x-35;
                 System.out.println("----->x最终: "+x);
                 actions.dragAndDropBy(button, x, 0).perform();//第一次
 
@@ -152,33 +154,6 @@ public class Wy163LoginBrowser {
             }
         }
         return flag;
-    }
-    /**
-     * 获取验证码--坐标
-     * @param attr
-     * @return
-     */
-    private static String getParam(String attr) {
-        try{
-            URL url = new URL(attr);//图片地址
-            HttpURLConnection openConnection = (HttpURLConnection)url.openConnection();
-            openConnection.connect();
-            InputStream is = openConnection.getInputStream();
-            byte[] b = new byte[1024];
-            int len;
-            OutputStream os = new FileOutputStream(new File(GuideAbstract.getPicName("wy163")));
-            while((len = is.read(b)) != -1){
-                os.write(b, 0, len);
-            }
-            os.close();
-            is.close();
-            String code = RuoKuai.createByPostNew("6137", GuideAbstract.getPicName("wy163"));
-            System.out.println(code);
-            return code;
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
     }
     /**
      * 获取评论地址

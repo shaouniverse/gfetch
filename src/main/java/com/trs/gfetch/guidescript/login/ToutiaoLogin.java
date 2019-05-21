@@ -4,6 +4,7 @@ import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.utils.FileUtil;
 import com.trs.gfetch.utils.RuoKuai;
+import com.trs.gfetch.utils.Yzm91;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -82,10 +83,11 @@ public class ToutiaoLogin {
                     actions.dragAndDropBy(button, 200, 0).perform();//第一次
 
                     Thread.sleep(1000);
-                    if(driver.findElement(By.id("verify-container")).isDisplayed()){
-                        System.out.println("滑动失败,继续 "+(m+1));
-                        continue;
-                    }else{
+                    try {
+                        driver.findElement(By.id("validate-big")).isDisplayed();
+                        System.out.println("验证码失败 "+(m+1));
+                    } catch (Exception e) {
+                        System.out.println("不在显示验证码");
                         flag = true;
                         break;
                     }
@@ -107,9 +109,10 @@ public class ToutiaoLogin {
      */
     private static String getParam(String attr) {
         try{
-            FileUtil.addFile2Local(attr,GuideAbstract.getPicName("toutiaoCode"));
-            String code = RuoKuai.createByPostNew("6137", GuideAbstract.getPicName("toutiaoCode"));
-            System.out.println(code);
+//            FileUtil.addFile2Local(attr,GuideAbstract.getPicName("toutiaoCode"));
+            String code = Yzm91.getCodeResultDrap(attr, "toutiaoCode");
+//            String code = RuoKuai.createByPostNew("6137", GuideAbstract.getPicName("toutiaoCode"));
+            System.out.println("验证码结果------------------>"+code);
             return code;
         }catch(Exception e){
             e.printStackTrace();

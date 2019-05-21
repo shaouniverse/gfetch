@@ -29,14 +29,9 @@ public class Task implements Serializable {
 	private String type;//执行类型--调用哪个脚本
 	private Integer otherOpera;//附加数据--比如同时转发...
 
-	private String proxyIP = "";		//代理ip
+	private String proxyIp = "";		//代理ip
 	private Integer proxyPort = 0;	//代理ip端口
 
-	private String remark1;//备用1
-	private String remark2;//备用2
-	private String remark3;//备用3
-	private String remark4;//备用4
-	private String remark5;//备用5
 	/**
 	 * 下面是执行结果
 	 * code: 200 发帖成功

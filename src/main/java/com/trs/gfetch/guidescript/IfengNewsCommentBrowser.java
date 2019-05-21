@@ -4,6 +4,7 @@ import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
 import com.trs.gfetch.guidescript.login.IfengLoginBrowser;
 import com.trs.gfetch.guidescript.login.Judge404;
+import com.trs.gfetch.utils.App2PcAddress;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -22,6 +23,17 @@ public class IfengNewsCommentBrowser extends GuideAbstract {
 
     @Override
     public void toComment() {
+        String address = task.getAddress();
+        try {
+            address = App2PcAddress.appIfeng(address);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("APP链接转换失败-------------------->");
+            task.setCode(404);
+            return;
+        }
+        task.setAddress(address);
+
         driver.get(task.getAddress());
         if(!Judge404.judgeIsExsit(driver,task)){
             System.out.println("-------------->访问的页面不存在");

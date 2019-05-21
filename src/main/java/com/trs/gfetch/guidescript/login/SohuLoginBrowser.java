@@ -60,7 +60,7 @@ public class SohuLoginBrowser {
         try {
             for(int i=0;i<3;i++){
                 WebElement codeEle = driver.findElement(By.xpath("/html/body/div[5]/div[3]/ul/li[3]/img"));
-                String code = GuideAbstract.getVerificationCode(driver,codeEle,"sohu","3040");
+                String code = GuideAbstract.getVerificationCode(driver,codeEle,"sohu",1007);
                 driver.findElement(By.xpath("/html/body/div[5]/div[3]/ul/li[3]/input")).sendKeys(code);
                 driver.findElement(By.xpath("/html/body/div[5]/div[3]/div[2]/input")).click();
                 Thread.sleep(1000);

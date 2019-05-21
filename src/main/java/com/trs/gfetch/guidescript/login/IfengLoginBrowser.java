@@ -2,6 +2,7 @@ package com.trs.gfetch.guidescript.login;
 
 import com.trs.gfetch.common.GuideAbstract;
 import com.trs.gfetch.entity.Task;
+import com.trs.gfetch.utils.DriverUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -39,7 +40,7 @@ public class IfengLoginBrowser {
             try {
                 //获得验证码
                 WebElement imgCode = driver.findElement(By.id("code_img"));
-                String code = GuideAbstract.getVerificationCode(driver,imgCode,"ifeng","3040");
+                String code = GuideAbstract.getVerificationCode(driver,imgCode,"ifeng",1007);
                 //输入验证码,并提交
                 driver.findElement(By.id("userLogin_securityCode")).clear();
                 driver.findElement(By.id("userLogin_securityCode")).sendKeys(code);
@@ -73,10 +74,18 @@ public class IfengLoginBrowser {
         try {
             //非评论页的话,点击到评论页
             if(!task.getAddress().contains("gentie")){
-                WebElement aboutLink = driver.findElement(By.partialLinkText("人参与"));
-                aboutLink.click();
-                switchToNewWindow(driver);
-                Thread.sleep(2000);
+                try {
+                    driver.findElement(By.xpath("//a[contains(@href,\"gentie.ifeng\")]")).click();
+                    switchToNewWindow(driver);
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    //针对 feng.ifeng.com 类型链接
+                    WebElement elediv = driver.findElement(By.xpath("//*[@id=\"root\"]/div[3]/div[2]/div[2]/div"));
+                    DriverUtil.moveMouseToElement(driver,elediv);
+                    Thread.sleep(1000);
+                    driver.findElement(By.xpath("//a[contains(@href,\"gentie.ifeng\")]")).click();
+                    switchToNewWindow(driver);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

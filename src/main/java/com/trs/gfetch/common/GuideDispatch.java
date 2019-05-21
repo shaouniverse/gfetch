@@ -42,6 +42,8 @@ public class GuideDispatch {
         GuideAbstract.handlerMap.put("news.thepaper.comment",new ThepaperNewsComment());
         //今日头条
         GuideAbstract.handlerMap.put("news.toutiao.comment",new ToutiaoNewsComment());
+        //一点资讯
+        GuideAbstract.handlerMap.put("news.yidianzixun.comment",new YidianzixunNewsComment());
     }
 
     public static void main(String[] args) throws Exception{

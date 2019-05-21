@@ -109,10 +109,10 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 	 * 获得图片验证码
 	 * @param element
 	 * @param name --验证码名称
-	 * @param code --解析验证码编码
+	 * @param code --解析验证码编码--0 默认4-6位英数混喝
 	 * @return
 	 */
-	public static String getVerificationCode(WebDriver driver,WebElement element,String name,String code){
+	public static String getVerificationCode(WebDriver driver,WebElement element,String name,int code){
 		try {
 
 			File screenshotAs = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
@@ -129,8 +129,13 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 
 			File file = new File(picCode+name+".png");
 			FileUtils.copyFile(screenshotAs, file);
-
-			String result = RuoKuai.createByPostNew(code, picCode+name+".png");
+			String result = null;
+			if(code==0){
+				result = Yzm91.getYzmYS(picCode+name+".png");
+			}else{
+				result = Yzm91.getYzm(picCode+name+".png",code);
+			}
+//			String result = RuoKuai.createByPostNew(code, picCode+name+".png");
 			return result;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -179,13 +184,13 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 	 * 分辨率不一样导致截图不准解决
 	 */
 	public static int getXY(int xy){
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		java.awt.Dimension scrnsize = toolkit.getScreenSize();
-		int width = scrnsize.width;
-		System.out.println ("Screen size : " + scrnsize.width + " * " + scrnsize.height);
-		if(width >= 1800){
-			xy = (int)(xy*1.25);
-		}
+//		Toolkit toolkit = Toolkit.getDefaultToolkit();
+//		java.awt.Dimension scrnsize = toolkit.getScreenSize();
+//		int width = scrnsize.width;
+//		System.out.println ("Screen size : " + scrnsize.width + " * " + scrnsize.height);
+//		if(width >= 1800){
+//			xy = (int)(xy*1.25);
+//		}
 		return xy;
 	}
 
@@ -195,9 +200,9 @@ public abstract class GuideAbstract implements GuideFetchInterf{
 	 * @return
 	 */
 	public static int resetXY(int x){
-		if(x>180) x = x-75;
-		else if(x<60) x = x-30;
-		else x = x-50;
+//		if(x>180) x = x-75;
+//		else if(x<60) x = x-30;
+//		else x = x-50;
 		return x;
 	}
 }
